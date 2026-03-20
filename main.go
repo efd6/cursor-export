@@ -39,7 +39,15 @@ func main() {
 	}
 
 	if *list {
-		listChats(workspaces, *ws, *chatFilter)
+		switch *format {
+		case "json":
+			err = listChatsJSON(workspaces, *ws, *chatFilter)
+			if err != nil {
+				log.Fatal(err)
+			}
+		default:
+			listChats(workspaces, *ws, *chatFilter)
+		}
 		return
 	}
 
@@ -127,13 +135,13 @@ func listChats(workspaces []workspace, wsFilter, chatFilter string) {
 			}
 			created := ""
 			if c.CreatedAt > 0 {
-				created = time.UnixMilli(c.CreatedAt).Format("2006-01-02")
+				created = time.UnixMilli(c.CreatedAt).Format(time.RFC3339)
 			}
 			mode := c.UnifiedMode
 			if mode == "" {
 				mode = "-"
 			}
-			lines = append(lines, fmt.Sprintf("  %s\t%s\t%s\n", name, mode, created))
+			lines = append(lines, fmt.Sprintf("  %s\t%s\t%s\t%s\n", name, mode, c.ComposerID, created))
 		}
 		if len(lines) == 0 {
 			continue
@@ -144,6 +152,42 @@ func listChats(workspaces []workspace, wsFilter, chatFilter string) {
 		}
 	}
 	tw.Flush()
+}
+
+func listChatsJSON(workspaces []workspace, wsFilter, chatFilter string) error {
+	type chat struct {
+		Workspace string `json:"workspace"`
+		composerMeta
+	}
+	var chats []chat
+	for _, ws := range workspaces {
+		if wsFilter != "" && !matchWorkspace(ws, wsFilter) {
+			continue
+		}
+		wdb, err := openDB(ws.DBPath)
+		if err != nil {
+			log.Printf("warning: workspace %s: %v", ws.Name, err)
+			continue
+		}
+		composers, err := composerList(wdb)
+		wdb.Close()
+		if err != nil {
+			log.Printf("warning: workspace %s: %v", ws.Name, err)
+			continue
+		}
+		for _, c := range composers {
+			if !matchChat(c, chatFilter) {
+				continue
+			}
+			chats = append(chats, chat{Workspace: ws.Name, composerMeta: c})
+		}
+	}
+	b, err := json.Marshal(chats)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("%s\n", b)
+	return nil
 }
 
 type message struct {
@@ -184,7 +228,8 @@ func matchChat(c composerMeta, pattern string) bool {
 	if name == "" {
 		name = c.ComposerID
 	}
-	return strings.Contains(strings.ToLower(name), strings.ToLower(pattern))
+	pattern = strings.ToLower(pattern)
+	return strings.Contains(strings.ToLower(name), pattern) || strings.Contains(strings.ToLower(c.ComposerID), pattern)
 }
 
 func exportWorkspace(ws workspace, gdb *sql.DB, chatFilter string) (workspaceExport, error) {
