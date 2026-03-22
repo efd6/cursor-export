@@ -23,6 +23,7 @@ func main() {
 	ws := flag.String("workspace", "", "export only this workspace (matched against name or folder path)")
 	chatFilter := flag.String("chat", "", "export only chats whose name contains this string (case-insensitive)")
 	list := flag.Bool("list", false, "list all chats and exit")
+	extra := flag.Bool("extra", false, "include thinking blocks, tool calls, and model info")
 	format := flag.String("format", "json", "output format: json or md")
 	outFile := flag.String("o", "", "output file (default: stdout)")
 	flag.Parse()
@@ -76,7 +77,7 @@ func main() {
 		if *ws != "" && !matchWorkspace(w, *ws) {
 			continue
 		}
-		export, err := exportWorkspace(w, gdb, *chatFilter)
+		export, err := exportWorkspace(w, gdb, *chatFilter, *extra)
 		if err != nil {
 			log.Printf("warning: workspace %s (%s): %v", w.Name, w.Hash, err)
 			continue
@@ -191,8 +192,19 @@ func listChatsJSON(workspaces []workspace, wsFilter, chatFilter string) error {
 }
 
 type message struct {
-	Role string `json:"role"`
-	Text string `json:"text"`
+	Role      string       `json:"role"`
+	CreatedAt time.Time    `json:"createdAt"`
+	Text      string       `json:"text,omitempty"`
+	Model     string       `json:"model,omitempty"`
+	Thinking  string       `json:"thinking,omitempty"`
+	ToolCall  *toolCallMsg `json:"toolCall,omitempty"`
+}
+
+type toolCallMsg struct {
+	Name   string `json:"name"`
+	Params string `json:"params,omitempty"`
+	Result string `json:"result,omitempty"`
+	Status string `json:"status,omitempty"`
 }
 
 type chat struct {
@@ -232,7 +244,7 @@ func matchChat(c composerMeta, pattern string) bool {
 	return strings.Contains(strings.ToLower(name), pattern) || strings.Contains(strings.ToLower(c.ComposerID), pattern)
 }
 
-func exportWorkspace(ws workspace, gdb *sql.DB, chatFilter string) (workspaceExport, error) {
+func exportWorkspace(ws workspace, gdb *sql.DB, chatFilter string, extra bool) (workspaceExport, error) {
 	wdb, err := openDB(ws.DBPath)
 	if err != nil {
 		return workspaceExport{}, err
@@ -274,17 +286,15 @@ func exportWorkspace(ws workspace, gdb *sql.DB, chatFilter string) (workspaceExp
 				log.Printf("warning: bubble %s/%s: %v", c.ComposerID, h.BubbleID, err)
 				continue
 			}
-			if b == nil || b.Text == "" {
+			if b == nil {
 				continue
 			}
-			role := "assistant"
-			if b.Type == 1 {
-				role = "user"
+
+			msg, ok := bubbleToMessage(b, extra)
+			if !ok {
+				continue
 			}
-			ch.Messages = append(ch.Messages, message{
-				Role: role,
-				Text: b.Text,
-			})
+			ch.Messages = append(ch.Messages, msg)
 		}
 
 		if len(ch.Messages) > 0 {
@@ -293,6 +303,54 @@ func exportWorkspace(ws workspace, gdb *sql.DB, chatFilter string) (workspaceExp
 	}
 
 	return export, nil
+}
+
+func bubbleToMessage(b *bubble, extra bool) (message, bool) {
+	role := "assistant"
+	if b.Type == 1 {
+		role = "user"
+	}
+	ts, _ := time.Parse(time.RFC3339Nano, b.CreatedAt)
+
+	switch {
+	case b.CapabilityType == 15 && b.ToolFormerData != nil && extra:
+		msg := message{
+			Role:      "tool",
+			CreatedAt: ts,
+			ToolCall: &toolCallMsg{
+				Name:   b.ToolFormerData.Name,
+				Params: b.ToolFormerData.Params,
+				Result: b.ToolFormerData.Result,
+				Status: b.ToolFormerData.Status,
+			},
+		}
+		return msg, true
+
+	case b.CapabilityType == 30 && b.Thinking != nil && extra:
+		msg := message{
+			Role:      role,
+			CreatedAt: ts,
+			Thinking:  b.Thinking.Text,
+		}
+		return msg, msg.Thinking != ""
+
+	default:
+		if b.Text == "" {
+			return message{}, false
+		}
+		msg := message{
+			Role:      role,
+			CreatedAt: ts,
+			Text:      b.Text,
+		}
+		if extra && b.ModelInfo != nil {
+			msg.Model = b.ModelInfo.ModelName
+		}
+		if extra && b.Thinking != nil && b.Thinking.Text != "" {
+			msg.Thinking = b.Thinking.Text
+		}
+		return msg, true
+	}
 }
 
 func writeJSON(w io.Writer, exports []workspaceExport) {
@@ -319,9 +377,42 @@ func writeMarkdown(w io.Writer, exports []workspaceExport) {
 			fmt.Fprintf(w, "- Mode: %s\n", ch.Mode)
 			fmt.Fprintf(w, "- Created: %s\n\n", ch.CreatedAt.Format(time.RFC3339))
 			for _, msg := range ch.Messages {
-				fmt.Fprintf(w, "### %s\n\n%s\n\n", msg.Role, msg.Text)
+				writeMarkdownMessage(w, msg)
 			}
 			fmt.Fprintln(w, "---")
 		}
+	}
+}
+
+func writeMarkdownMessage(w io.Writer, msg message) {
+	heading := msg.Role
+	if msg.Model != "" {
+		heading += " (" + msg.Model + ")"
+	}
+	if !msg.CreatedAt.IsZero() {
+		heading += " — " + msg.CreatedAt.Format(time.RFC3339)
+	}
+
+	if msg.ToolCall != nil {
+		toolHeading := "tool: " + msg.ToolCall.Name
+		if !msg.CreatedAt.IsZero() {
+			toolHeading += " — " + msg.CreatedAt.Format(time.RFC3339)
+		}
+		fmt.Fprintf(w, "### %s\n\n", toolHeading)
+		if msg.ToolCall.Params != "" {
+			fmt.Fprintf(w, "**Params:**\n```json\n%s\n```\n\n", msg.ToolCall.Params)
+		}
+		if msg.ToolCall.Result != "" {
+			fmt.Fprintf(w, "**Result:**\n```json\n%s\n```\n\n", msg.ToolCall.Result)
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "### %s\n\n", heading)
+	if msg.Thinking != "" {
+		fmt.Fprintf(w, "<details><summary>thinking</summary>\n\n%s\n\n</details>\n\n", msg.Thinking)
+	}
+	if msg.Text != "" {
+		fmt.Fprintf(w, "%s\n\n", msg.Text)
 	}
 }

@@ -78,9 +78,30 @@ func composerConversationOrder(db *sql.DB, composerID string) ([]bubbleHeader, e
 
 // bubble is the content of a single message.
 type bubble struct {
-	BubbleID string `json:"bubbleId"`
-	Type     int    `json:"type"`
-	Text     string `json:"text"`
+	BubbleID       string          `json:"bubbleId"`
+	Type           int             `json:"type"`
+	CapabilityType int             `json:"capabilityType"`
+	CreatedAt      string          `json:"createdAt"`
+	Text           string          `json:"text"`
+	Thinking       *thinkingBlock  `json:"thinking,omitempty"`
+	ToolFormerData *toolFormerData `json:"toolFormerData,omitempty"`
+	ModelInfo      *modelInfo      `json:"modelInfo,omitempty"`
+}
+
+type thinkingBlock struct {
+	Text      string `json:"text"`
+	Signature string `json:"signature,omitempty"`
+}
+
+type toolFormerData struct {
+	Name   string `json:"name"`
+	Params string `json:"params"`
+	Result string `json:"result,omitempty"`
+	Status string `json:"status,omitempty"`
+}
+
+type modelInfo struct {
+	ModelName string `json:"modelName"`
 }
 
 // readBubble reads a single bubble's content from the global database.
