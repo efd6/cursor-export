@@ -1,0 +1,4037 @@
+// Reconstructed from Cursor JS bundle — not official .proto files.
+// Types are resolved where possible; /* unresolved */ marks
+// fields whose concrete type could not be determined.
+syntax = "proto3";
+
+package aiserver.v1;
+
+message AddAsyncFollowupBackgroundComposerRequest {
+  string bc_id = 1;
+  string followup = 2;
+  string rich_followup = 4;
+  bool synchronous = 3;
+  ConversationMessage followup_message = 5;
+  ModelDetails model_details = 6;
+  int32 /* enum */ followup_source = 7;
+  bool continue_rebase = 8;
+  int32 /* enum */ plan_followup_type = 9;
+  agent.v1.ConversationAction followup_conversation_action = 10;
+  string followup_id = 11;
+  int64 time_budget_ms = 12;
+  int64 time_budget_seconds = 13;
+  string followup_system_reminder = 14;
+}
+
+message AdvancedCodebaseContextOptions {
+  int32 num_results_per_search = 1;
+  string include_pattern = 2;
+  string exclude_pattern = 3;
+  int32 /* enum */ reranker = 4;
+  string index_id = 5;
+  bool reasoning_step = 6;
+  int32 /* enum */ rechunker = 7;
+}
+
+message AnalyticsContext {
+  ClientInfo client = 1;
+}
+
+message ArchiveBackgroundComposerRequest {
+  string bc_id = 1;
+  bool unarchive = 2;
+  bool only_notify_runner = 3;
+  int32 /* enum */ source = 4;
+}
+
+message AttachBackgroundComposerLogsRequest {
+  string bc_id = 1;
+  string last_event_id = 2;
+  uint32 worker_index = 3;
+}
+
+message AttachBackgroundComposerLogsResponse {
+  AttachBackgroundComposerLogsResponse.Event event = 1;
+  anyrun.v1.PodStatus updated_status = 2;
+  ErrorDetails start_error = 3;
+}
+
+message AttachBackgroundComposerLogsResponse.Event {
+  string event_id = 1;
+  anyrun.v1.PodEvent event = 2;
+}
+
+message AttachBackgroundComposerPodRequest {
+  string pod_id = 1;
+  string last_event_id = 2;
+}
+
+message AttachBackgroundComposerPodResponse {
+  AttachBackgroundComposerPodResponse.Event event = 1;
+  anyrun.v1.PodStatus updated_status = 2;
+}
+
+message AttachBackgroundComposerPodResponse.Event {
+  string event_id = 1;
+  anyrun.v1.PodEvent event = 2;
+}
+
+message AttachBackgroundComposerRequest {
+  string bc_id = 1;
+  int32 starting_index = 2;
+}
+
+message AttachBackgroundComposerResponse {
+  HeadlessAgenticComposerResponse headless_agentic_composer_response = 1;
+  HeadlessAgenticComposerPrompt prompt = 2;
+  string starting_commit = 4;
+  string base_branch = 5;
+  int32 /* enum */ status_update = 6;
+  GitDiff diff_since_start = 3;
+}
+
+message AutoContextConfig {
+  bool enabled = 1;
+  bool enabled_fallback = 2;
+  bool enabled_git_graph = 3;
+  bool enabled_sem_search = 4;
+  bool enabled_v2 = 5;
+}
+
+message AutoContextFile {
+  string relative_workspace_path = 1;
+  string file_content = 2;
+}
+
+message AutoContextRankedFile {
+  string relative_workspace_path = 1;
+  float reranking_score = 2;
+}
+
+message AutoContextRequest {
+  string text = 1;
+  AutoContextFile candidate_files = 2;
+  ModelDetails model_details = 3;
+}
+
+message AutoContextResponse {
+  AutoContextRankedFile ranked_files = 1;
+}
+
+message AvailableCppModelsResponse {
+  string models = 1;
+  string default_model = 2;
+}
+
+message AvailableModelsRequest {
+  bool is_nightly = 1;
+  bool include_long_context_models = 2;
+  bool exclude_max_named_models = 3;
+  string additional_model_names = 4;
+  bool use_model_parameters = 5;
+  bool include_hidden_models = 6;
+}
+
+message AvailableModelsResponse {
+  AvailableModelsResponse.AvailableModel models = 2;
+  string model_names = 1;
+  AvailableModelsResponse.FeatureModelConfig composer_model_config = 4;
+  AvailableModelsResponse.FeatureModelConfig cmd_k_model_config = 5;
+  AvailableModelsResponse.FeatureModelConfig background_composer_model_config = 6;
+  AvailableModelsResponse.FeatureModelConfig plan_execution_model_config = 7;
+  AvailableModelsResponse.FeatureModelConfig spec_model_config = 8;
+  AvailableModelsResponse.FeatureModelConfig deep_search_model_config = 9;
+  AvailableModelsResponse.FeatureModelConfig quick_agent_model_config = 10;
+  bool use_model_parameters = 11;
+  int32 disable_unused_models_after_n_hours = 12;
+  int32 upgrade_unchanged_models_after_n_hours = 13;
+}
+
+message AvailableModelsResponse.AvailableModel {
+  string name = 1;
+  bool default_on = 2;
+  bool is_long_context_only = 3;
+  bool is_chat_only = 4;
+  bool supports_agent = 5;
+  int32 /* enum */ degradation_status = 6;
+  double price = 7;
+  AvailableModelsResponse.TooltipData tooltip_data = 8;
+  AvailableModelsResponse.TooltipData tooltip_data_for_max_mode = 20;
+  bool supports_thinking = 9;
+  bool supports_images = 10;
+  bool supports_auto_context = 11;
+  int32 auto_context_max_tokens = 12;
+  int32 auto_context_extended_max_tokens = 13;
+  bool supports_max_mode = 14;
+  bool supports_non_max_mode = 19;
+  int32 context_token_limit = 15;
+  int32 context_token_limit_for_max_mode = 16;
+  string client_display_name = 17;
+  string server_model_name = 18;
+  bool is_recommended_for_background_composer = 21;
+  bool supports_plan_mode = 22;
+  bool supports_sandboxing = 25;
+  bool is_user_added = 23;
+  string inputbox_short_model_name = 24;
+  bool supports_cmd_k = 26;
+  bool only_supports_cmd_k = 27;
+  int32 background_composer_sort_order = 28;
+  ModelParameterDefinition parameter_definitions = 29;
+  AvailableModelsResponse.ModelVariantConfig variants = 30;
+  int32 /* enum */ cloud_agent_effort_mode = 32;
+  string cloud_migrate_to_model = 33;
+  string upgrade_model_id = 34;
+  bool is_hidden = 35;
+  string legacy_slugs = 36;
+  int32 named_model_section_index = 38;
+  string tagline = 39;
+}
+
+message AvailableModelsResponse.FeatureModelConfig {
+  string default_model = 1;
+  string fallback_models = 2;
+  string best_of_n_default_models = 3;
+}
+
+message AvailableModelsResponse.ModelVariantConfig {
+  agent.v1.RequestedModel.ModelParameterValue parameter_values = 1;
+  string display_name = 2;
+  string display_name_outside_picker = 8;
+  bool is_max_mode = 3;
+  bool is_default_max_config = 4;
+  bool is_default_non_max_config = 5;
+  AvailableModelsResponse.TooltipData tooltip_data = 6;
+  string tagline = 7;
+  string variant_string_representation = 9;
+}
+
+message AvailableModelsResponse.TooltipData {
+  string primary_text = 1;
+  string secondary_text = 2;
+  bool secondary_warning_text = 3;
+  string icon = 4;
+  string tertiary_text = 5;
+  string tertiary_text_url = 6;
+  string markdown_content = 7;
+}
+
+message BackgroundComposer {
+  string bc_id = 1;
+  double created_at_ms = 2;
+  double updated_at_ms = 20;
+  string workspace_root_path = 3;
+  bool is_owned_by_different_team_member = 4;
+  string name = 5;
+  string branch_name = 6;
+  bool has_started_vm = 7;
+  string repo_url = 8;
+  bool is_archived = 9;
+  string n_id = 10;
+  bool is_killed = 11;
+  int32 /* enum */ status = 12;
+  bool is_unread = 13;
+  int32 /* enum */ source = 14;
+  string github_issue_id = 24;
+  string slack_channel_id = 15;
+  string slack_message_timestamp = 16;
+  string slack_team_id = 17;
+  string linear_issue_id = 18;
+  string linear_org_id = 19;
+  string prompt_group_id = 21;
+  string pr_url = 22;
+  bool is_pr_merged = 23;
+  int32 lines_added = 25;
+  int32 lines_removed = 26;
+  int32 files_changed = 27;
+  ModelDetails model_details = 28;
+  string triggered_principal_type = 29;
+  string triggered_principal_id = 30;
+  string visibility = 31;
+  int32 /* enum */ ensemble_status = 32;
+  string workflow_id = 33;
+  string agent_session_id = 34;
+  string kickoff_message_id = 35;
+  string grind_phase = 36;
+  int32 commit_count = 37;
+  string latest_commit_sha = 38;
+  string latest_commit_message = 39;
+  double last_message_activity_at_ms = 40;
+  string owning_service_account = 41;
+  string owning_service_account_name = 42;
+  int32 /* enum */ pr_status = 43;
+}
+
+message BackgroundComposerArtifact {
+  string absolute_path = 1;
+  int64 size_bytes = 2;
+  int64 updated_at_unix_ms = 3;
+}
+
+message BackgroundComposerCachedDetailsProto {
+  string diff_changes_hash = 1;
+  GetDiffResponse detailed_diff = 2;
+  DetailedBackgroundComposer bc = 3;
+}
+
+message BackgroundComposerCommit {
+  string sha = 1;
+  string message = 2;
+  string author_name = 3;
+  string author_email = 4;
+  string timestamp = 5;
+}
+
+message BackgroundComposerConfig {
+  bool enable_background_agent = 1;
+  bool show_background_agent_in_beta_settings = 2;
+  int32 window_in_window_preload_count = 3;
+  double window_in_window_ping_interval_ms = 4;
+  bool show_background_agent_disclaimer = 5;
+  bool show_background_agent_slack_ad = 6;
+  bool show_background_agent_history_action = 7;
+  int32 max_window_in_windows = 8;
+  bool use_modal_experience = 9;
+}
+
+message BackgroundComposerFollowupContent {
+  string text = 1;
+  string rich_text = 2;
+}
+
+message BackgroundComposerFollowupParams {
+  string proposed_followup = 1;
+  string bc_id = 2;
+}
+
+message BackgroundComposerFollowupResult {
+  string proposed_followup = 1;
+  bool is_sent = 2;
+}
+
+message BackgroundComposerFullDiff {
+  string path = 1;
+  string original_content = 2;
+  string modified_content = 3;
+  string submodule_path = 4;
+  GitDiff git_diff = 5;
+  string full_path = 6;
+  string base_ref = 7;
+}
+
+message BackgroundComposerSnapshotStatusByBcId {
+  string bc_id = 1;
+  string snapshot_id = 2;
+  int32 /* enum */ visibility = 3;
+  double created_at_ms = 4;
+}
+
+message BackgroundComposerSnapshotSummary {
+  string snapshot_id = 1;
+  int32 /* enum */ visibility = 2;
+  double created_at_ms = 3;
+}
+
+message BackgroundComposerUserEgressPolicy {
+  string allowlist = 1;
+}
+
+message BlockDiffPatch.ModelWindow {
+  string lines = 1;
+  int32 start_line_number = 2;
+  int32 end_line_number = 3;
+}
+
+message BugBotEvent.PressedAddToChat {
+  string bug_report_id = 1;
+}
+
+message BugBotEvent.PressedFixInComposer {
+  string bug_report_id = 1;
+}
+
+message BugContext {
+  string screenshots = 1;
+  CurrentFileInfo current_file = 2;
+  ConversationMessage conversation = 3;
+  LogFile logs = 4;
+  string console_logs = 5;
+  string cursor_version = 6;
+  string os = 7;
+  string proto_url = 8;
+  string failing_requst_id = 9;
+  string connection_error_raw = 10;
+  CmdKDebugInfo debug_info = 12;
+  int32 connect_error_code = 13;
+  int32 /* enum */ error_detail_code = 14;
+  string error_detail_title = 15;
+  string error_detail_detail = 16;
+}
+
+message BuiltinToolCall {
+  int32 /* enum */ tool = 1;
+  string tool_call_id = 22;
+  oneof params {
+    SearchParams search_params = 2;
+    ReadChunkParams read_chunk_params = 3;
+    GotodefParams gotodef_params = 4;
+    EditParams edit_params = 5;
+    UndoEditParams undo_edit_params = 6;
+    EndParams end_params = 7;
+    NewFileParams new_file_params = 8;
+    AddTestParams add_test_params = 9;
+    RunTestParams run_test_params = 10;
+    DeleteTestParams delete_test_params = 11;
+    SaveFileParams save_file_params = 12;
+    GetTestsParams get_tests_params = 13;
+    GetSymbolsParams get_symbols_params = 14;
+    SemanticSearchParams semantic_search_params = 15;
+    GetProjectStructureParams get_project_structure_params = 16;
+    CreateRmFilesParams create_rm_files_params = 17;
+    RunTerminalCommandsParams run_terminal_commands_params = 18;
+    NewEditParams new_edit_params = 19;
+    ReadWithLinterParams read_with_linter_params = 20;
+    AddUiStepParams add_ui_step_params = 21;
+    ReadSemsearchFilesParams read_semsearch_files_params = 23;
+    DeleteFileParams delete_file_params = 26;
+  }
+}
+
+message BuiltinToolResult {
+  int32 /* enum */ tool = 1;
+  oneof result {
+    SearchResult search_result = 2;
+    ReadChunkResult read_chunk_result = 3;
+    GotodefResult gotodef_result = 4;
+    EditResult edit_result = 5;
+    UndoEditResult undo_edit_result = 6;
+    /* unresolved */ end_result = 7;
+    NewFileResult new_file_result = 8;
+    AddTestResult add_test_result = 9;
+    RunTestResult run_test_result = 10;
+    DeleteTestResult delete_test_result = 11;
+    SaveFileResult save_file_result = 12;
+    GetTestsResult get_tests_result = 13;
+    GetSymbolsResult get_symbols_result = 14;
+    SemanticSearchResult semantic_search_result = 15;
+    GetProjectStructureResult get_project_structure_result = 16;
+    CreateRmFilesResult create_rm_files_result = 17;
+    RunTerminalCommandsResult run_terminal_commands_result = 18;
+    NewEditResult new_edit_result = 19;
+    ReadWithLinterResult read_with_linter_result = 20;
+    AddUiStepResult add_ui_step_result = 21;
+    ReadSemsearchFilesResult read_semsearch_files_result = 22;
+    DeleteFileResult delete_file_result = 24;
+  }
+}
+
+message CachedFileContext {
+  string relative_path = 1;
+  string language = 2;
+  string full_content = 3;
+  int64 last_viewed_timestamp = 4;
+}
+
+message CallMcpToolResult {
+  string server = 1;
+  string tool_name = 2;
+  google.protobuf.Struct result = 3;
+}
+
+message ChangeBackgroundComposerSnapshotVisibilityRequest {
+  string snapshot_id = 1;
+  int32 /* enum */ visibility = 2;
+  string repo_url = 3;
+}
+
+message ChatConfig {
+  bool disable_unification = 1;
+  int32 full_context_token_limit = 2;
+  bool disable_yolo_mode = 3;
+  int32 max_rule_length = 4;
+  int32 max_mcp_tools = 5;
+  int32 warn_mcp_tools = 6;
+  string summarization_message = 7;
+  int32 num_files_for_memory_generation = 8;
+  bool memory_default_enabled = 9;
+  int32 num_summarizations_before_warning_shown = 10;
+  bool cursor_rules_read_file_fix_enabled = 11;
+  bool dont_send_ctrl_c_before_command = 12;
+  int32 client_statsig_poll_interval_ms = 13;
+  bool disable_statsig = 14;
+  string list_dir_v2_predefined_ignore_globs = 15;
+}
+
+message ChatEvent {
+  string request_id = 1;
+  oneof event_type {
+    ChatEvent.SubmitPrompt submit_prompt = 2;
+    ChatEvent.EndOfAnyGeneration end_of_any_generation = 3;
+    ChatEvent.EndOfUninterruptedGeneration end_of_uninterrupted_generation = 4;
+  }
+}
+
+message ChatEvent.SubmitPrompt {
+  string prompt = 1;
+}
+
+message ChatExternalLink {
+  string url = 1;
+  string uuid = 2;
+  string pdf_content = 3;
+  bool is_pdf = 4;
+  string filename = 5;
+}
+
+message ChatQuote {
+  string markdown = 1;
+  string bubble_id = 2;
+  int32 section_index = 3;
+}
+
+message ChatRequestTelemetryEvent {
+  string chat_request_uuid = 1;
+  string requested_model = 2;
+  string actual_model = 3;
+  /* unresolved */ start_time = 4;
+  /* unresolved */ end_time = 5;
+  google.protobuf.Duration duration = 6;
+  bool success = 7;
+  string error_message = 8;
+  string transport = 9;
+  string completion_status = 10;
+  map<string, string> /* approx */ metadata = 11;
+  double total_ttft_ms = 12;
+  double total_generate_ms = 13;
+  double total_stream_ms = 14;
+  double total_request_ms = 15;
+  int32 model_call_count = 16;
+  double total_tool_call_latency = 17;
+  int32 tool_call_count = 18;
+}
+
+message ChatRequestTelemetryEventV2 {
+  /* unresolved */ server_timestamp = 1;
+  string chat_id = 2;
+  int32 /* enum */ event_type = 3;
+  bool is_first_model_response = 4;
+  bool is_last_response = 5;
+  string tool_call_type = 6;
+  string tool_call_id = 7;
+  int32 output_tokens = 8;
+  int64 elapsed_ms = 9;
+  int32 sequence_number = 10;
+  map<string, string> /* approx */ metadata = 11;
+  string actual_model_name = 12;
+  string mode = 13;
+  string dsv3_deployment_id = 14;
+  string requested_model = 15;
+  int32 output_chars = 16;
+  bool is_new_agent_loop = 17;
+  int32 input_tokens = 18;
+  int32 cached_read_tokens = 19;
+  string parallel_tool_call_id = 20;
+  string region = 21;
+  string user_location = 22;
+  bool is_dev = 23;
+}
+
+message ChatSuggestionItem {
+  string text = 1;
+  string reason = 2;
+  string type = 3;
+  string category = 4;
+}
+
+message CheckQueuePositionResponse.ModelForSlowPoolNudgeData {
+  string model = 1;
+  string message = 2;
+}
+
+message CmdKExternalLink {
+  string url = 1;
+  string uuid = 2;
+}
+
+message CmdKLegacyContext {
+  ExplicitContext explicit_context = 4;
+  CodeBlock prompt_code_blocks = 12;
+  string documentation_identifiers = 10;
+}
+
+message CodeChunkContextInclusionInfo {
+  string relative_workspace_path = 1;
+  int32 start_line_number = 2;
+  int32 end_line_number_inclusive = 3;
+  int32 /* enum */ inclusion_type = 4;
+  int32 full_file_token_count = 5;
+  int32 prompt_token_count = 6;
+  CodeChunkContextInclusionInfo.TokenCount full_file_tokens_count = 11;
+  string exclusion_tooltip = 7;
+  int32 /* enum */ intent = 8;
+  bool chunk_is_from_last_user_message = 9;
+  bool is_compressed = 10;
+}
+
+message CodeChunkContextInclusionInfo.TokenCount {
+  bool is_too_large_to_count = 1;
+  int32 num_tokens = 2;
+}
+
+message CodeChunkContextInclusionInfoV2 {
+  string relative_workspace_path = 1;
+  int32 start_line_number = 2;
+  int32 end_line_number_inclusive = 3;
+  int32 /* enum */ intent = 4;
+  int32 /* enum */ inclusion_type = 10;
+  string tooltip_text = 6;
+  bool pill_is_dashed = 9;
+  string pill_sub_codicon_name = 8;
+  string detail_text = 5;
+  string codicon_name = 7;
+}
+
+message CommitBackgroundComposerRequest {
+  string bc_id = 1;
+  string commit_message = 2;
+}
+
+message CommitBackgroundComposerResponse {
+  string commit_hash = 1;
+}
+
+message ComposerAutocompleteContext {
+  CurrentFileContext current_file = 1;
+  CachedFileContext cached_files = 2;
+  ConversationMessage conversation_messages = 3;
+  string visible_viewport_text = 4;
+  string first_user_messages = 5;
+}
+
+message ComposerCapabilityContext {
+  oneof data {
+    ComposerCapabilityContext.SlackIntegrationContext slack_integration = 27;
+    ComposerCapabilityContext.GithubPRContext github_pr = 28;
+  }
+}
+
+message ComposerCapabilityContext.GithubPRContext {
+  string title = 1;
+  string description = 2;
+  string comments = 3;
+  string ci_failures = 4;
+}
+
+message ComposerCapabilityContext.SlackIntegrationContext {
+  string thread = 1;
+  string channel_name = 2;
+  string channel_purpose = 3;
+  string channel_topic = 4;
+}
+
+message ComposerCapabilityRequest {
+  int32 /* enum */ type = 1;
+  oneof data {
+    ComposerCapabilityRequest.LoopOnLintsCapability loop_on_lints = 2;
+    ComposerCapabilityRequest.LoopOnTestsCapability loop_on_tests = 3;
+    ComposerCapabilityRequest.MegaPlannerCapability mega_planner = 4;
+    ComposerCapabilityRequest.LoopOnCommandCapability loop_on_command = 5;
+    /* unresolved */ tool_call = 6;
+    ComposerCapabilityRequest.DiffReviewCapability diff_review = 7;
+    ComposerCapabilityRequest.ContextPickingCapability context_picking = 8;
+    ComposerCapabilityRequest.EditTrailCapability edit_trail = 9;
+    ComposerCapabilityRequest.AutoContextCapability auto_context = 10;
+    ComposerCapabilityRequest.ContextPlannerCapability context_planner = 11;
+    ComposerCapabilityRequest.RememberThisCapability remember_this = 12;
+    ComposerCapabilityRequest.DecomposerCapability decomposer = 13;
+    ComposerCapabilityRequest.CursorRulesCapability cursor_rules = 14;
+  }
+}
+
+message ComposerCapabilityRequest.AutoContextCapability {
+  string custom_instructions = 1;
+  string additional_files = 2;
+}
+
+message ComposerCapabilityRequest.ContextPickingCapability {
+  string custom_instructions = 1;
+  string potential_context_files = 2;
+  /* unresolved */ potential_context_code_chunks = 3;
+  string files_in_context = 4;
+}
+
+message ComposerCapabilityRequest.ContextPlannerCapability {
+  string custom_instructions = 1;
+  /* unresolved */ attached_code_chunks = 2;
+}
+
+message ComposerCapabilityRequest.CursorRulesCapability {
+  string custom_instructions = 1;
+}
+
+message ComposerCapabilityRequest.DecomposerCapability {
+  string custom_instructions = 1;
+}
+
+message ComposerCapabilityRequest.DiffReviewCapability {
+  string custom_instructions = 1;
+  ComposerCapabilityRequest.DiffReviewCapability.SimpleFileDiff diffs = 2;
+}
+
+message ComposerCapabilityRequest.DiffReviewCapability.SimpleFileDiff {
+  string relative_workspace_path = 1;
+  ComposerCapabilityRequest.DiffReviewCapability.SimpleFileDiff.Chunk chunks = 3;
+}
+
+message ComposerCapabilityRequest.DiffReviewCapability.SimpleFileDiff.Chunk {
+  string old_lines = 1;
+  string new_lines = 2;
+  LineRange old_range = 3;
+  LineRange new_range = 4;
+}
+
+message ComposerCapabilityRequest.EditTrailCapability {
+  string custom_instructions = 1;
+}
+
+message ComposerCapabilityRequest.LoopOnCommandCapability {
+  string command = 1;
+  string custom_instructions = 2;
+  string output = 3;
+  int32 exit_code = 4;
+}
+
+message ComposerCapabilityRequest.LoopOnLintsCapability {
+  LinterErrors linter_errors = 1;
+  string custom_instructions = 2;
+}
+
+message ComposerCapabilityRequest.LoopOnTestsCapability {
+  string test_names = 1;
+  string custom_instructions = 2;
+}
+
+message ComposerCapabilityRequest.MegaPlannerCapability {
+  string custom_instructions = 1;
+}
+
+message ComposerCapabilityRequest.RememberThisCapability {
+  string custom_instructions = 1;
+  string memory = 2;
+}
+
+message ComposerCapabilityRequest.SchemaProperty {
+  string type = 1;
+  string description = 2;
+}
+
+message ComposerCapabilityRequest.ToolCallCapability {
+  string custom_instructions = 1;
+  /* unresolved */ tool_schemas = 2;
+  string relevant_files = 3;
+  string files_in_context = 4;
+  string semantic_search_files = 5;
+}
+
+message ComposerCapabilityRequest.ToolSchema {
+  int32 /* enum */ type = 1;
+  string name = 2;
+  map<string, string> /* approx */ properties = 3;
+  string required = 4;
+}
+
+message ComposerEnhancerClientMessage {
+  oneof message {
+    ComposerEnhancerRequest request = 1;
+    ComposerEnhancerToolResult tool_result = 2;
+  }
+}
+
+message ComposerEnhancerRequest {
+  string input_text = 1;
+  string composer_id = 2;
+}
+
+message ComposerEnhancerResponse {
+  string improved_text = 1;
+  bool is_final = 2;
+}
+
+message ComposerEnhancerServerMessage {
+  oneof message {
+    ComposerEnhancerResponse response = 1;
+    ComposerEnhancerToolCall tool_call = 2;
+  }
+}
+
+message ComposerEnhancerToolCall {
+  string tool_call_id = 1;
+  string tool_name = 2;
+  string tool_args = 3;
+  int32 tool_index = 4;
+}
+
+message ComposerEnhancerToolResult {
+  string tool_call_id = 1;
+  string result = 2;
+  bool is_error = 3;
+}
+
+message ComposerExternalLink {
+  string url = 1;
+  string uuid = 2;
+  string pdf_content = 3;
+  bool is_pdf = 4;
+  string filename = 5;
+}
+
+message ComposerFileDiff {
+  ComposerFileDiff.ChunkDiff chunks = 1;
+  int32 /* enum */ editor = 2;
+  bool hit_timeout = 3;
+}
+
+message ComposerFileDiff.ChunkDiff {
+  string diff_string = 1;
+  int32 old_start = 2;
+  int32 new_start = 3;
+  int32 old_lines = 4;
+  int32 new_lines = 5;
+  int32 lines_removed = 6;
+  int32 lines_added = 7;
+}
+
+message ComposerFileDiffHistory {
+  string file_name = 1;
+  string diff_history = 2;
+  double diff_history_timestamps = 3;
+}
+
+message ContextAST {
+  ContainerTree files = 1;
+}
+
+message ContextIntent {
+  int32 /* enum */ type = 1;
+  string uuid = 15;
+  oneof intent {
+    ContextIntent.File file = 2;
+    ContextIntent.CodeSelection code_selection = 3;
+    ContextIntent.Lints lints = 5;
+    ContextIntent.RecentLocations recent_locations = 6;
+    ContextIntent.CmdKCurrentFile cmd_k_current_file = 8;
+    ContextIntent.CmdKQueryEtc cmd_k_query_etc = 9;
+    ContextIntent.TerminalCmdKDefaults terminal_cmd_k_defaults = 14;
+    ContextIntent.CmdKDefinitions cmd_k_definitions = 10;
+    /* unresolved */ documentation = 11;
+    ContextIntent.CustomInstructions custom_instructions = 12;
+    /* unresolved */ chat_history = 13;
+    ContextIntent.TerminalHistory terminal_history = 16;
+    ContextIntent.VisibleTabs visible_tabs = 17;
+    ContextIntent.LspSubgraph lsp_subgraph = 18;
+    ContextIntent.CommitNotes commit_notes = 19;
+    ContextIntent.DiffHistory diff_history = 20;
+    ContextIntent.PastCmdkConversationsInDiffSessions past_cmdk_messages_in_diff_sessions = 21;
+  }
+}
+
+message ContextIntent.CodeSelection {
+  string relative_workspace_path = 1;
+  SimpleRange potentially_out_of_date_range = 2;
+  string text = 3;
+}
+
+message ContextIntent.Documentation {
+  string documentation_identifier = 1;
+}
+
+message ContextIntent.File {
+  string relative_workspace_path = 1;
+  int32 /* enum */ mode = 2;
+}
+
+message ContextIntent.Lints {
+  int32 /* enum */ filter_to_severities = 3;
+  oneof scope {
+    ContextIntent.Lints.CmdKScope cmdk_scope = 1;
+    ContextIntent.Lints.FileScope file_scope = 2;
+  }
+}
+
+message ContextIntent.Lints.FileScope {
+  string relative_workspace_path = 1;
+  LineRange filter_range = 2;
+}
+
+message ContextIntent.RecentLocations {
+  double timestamp = 2;
+}
+
+message ContextIntent.Symbol {
+  DocumentSymbol symbol = 1;
+  string relative_workspace_path = 2;
+}
+
+message ContextIntent.TerminalHistory {
+  int32 instance_id = 1;
+  bool active_for_cmd_k = 2;
+  bool use_active_instance_as_fallback = 3;
+}
+
+message ContextItem {
+  ContextIntent intent = 1;
+  oneof item {
+    ContextItem.FileChunk file_chunk = 2;
+    ContextItem.OutlineChunk outline_chunk = 3;
+    ContextItem.CmdKSelection cmd_k_selection = 4;
+    ContextItem.CmdKImmediateContext cmd_k_immediate_context = 5;
+    ContextItem.CmdKQuery cmd_k_query = 6;
+    ContextItem.CmdKQueryHistory cmd_k_query_history = 7;
+    ContextItem.CustomInstructions custom_instructions = 8;
+    ContextItem.GoToDefinitionResult go_to_definition_result = 9;
+    ContextItem.DocumentationChunk documentation_chunk = 10;
+    ContextItem.Lints lints = 11;
+    ContextItem.ChatHistory chat_history = 12;
+    ContextItem.NotebookCellOutput notebook_cell_output = 13;
+    ContextItem.TerminalHistory terminal_history = 14;
+    ContextItem.TerminalCmdKQuery terminal_cmd_k_query = 15;
+    ContextItem.TerminalCmdKQueryHistory terminal_cmd_k_query_history = 16;
+    ContextItem.SparseFileChunk sparse_file_chunk = 17;
+    ContextItem.LspSubgraphChunk lsp_subgraph_chunk = 18;
+    ContextItem.CommitNoteChunk commit_note_chunk = 19;
+    ContextItem.FileDiffHistory file_diff_history = 20;
+    ContextItem.CmdKQueryHistoryInDiffSession cmd_k_query_history_in_diff_session = 21;
+    CursorRule project_rule = 22;
+  }
+}
+
+message ContextItem.ChatHistory {
+  string user_message = 1;
+  string assistant_response = 2;
+  /* unresolved */ chat_history = 3;
+  bool active_for_cmd_k = 4;
+  int64 timestamp = 5;
+  double timestamp_double = 6;
+}
+
+message ContextItem.CmdKImmediateContext {
+  string relative_workspace_path = 1;
+  ContextItem.CmdKImmediateContext.Line lines = 2;
+  int32 total_number_of_lines_in_file = 3;
+  int32 cell_number = 4;
+}
+
+message ContextItem.CmdKImmediateContext.Line {
+  string line = 1;
+  int32 line_number = 2;
+}
+
+message ContextItem.CmdKQuery {
+  string query = 1;
+}
+
+message ContextItem.CmdKQueryHistory {
+  ContextItem.CmdKQuery query = 1;
+  ContextItem.CmdKImmediateContext immediate_context = 2;
+  ContextItem.CmdKSelection selection = 3;
+  /* unresolved */ query_history = 4;
+  string context_item_hashes = 5;
+  int64 timestamp = 6;
+  double timestamp_double = 7;
+}
+
+message ContextItem.CmdKQueryHistoryInDiffSession {
+  ContextItem.CmdKQueryHistoryInDiffSession.PastCmdKQueryInDiffSession past_cmdk_queries = 1;
+  double curr_timestamp_double = 3;
+}
+
+message ContextItem.CmdKQueryHistoryInDiffSession.PastCmdKQueryInDiffSession {
+  ContextItem.CmdKQuery query = 1;
+  string relative_workspace_path = 2;
+  bool cmdk_was_accepted = 5;
+  double timestamp_double = 6;
+  double timestamp_for_diff_interleaving = 7;
+  string request_id = 8;
+}
+
+message ContextItem.CmdKSelection {
+  string lines = 1;
+  int32 start_line_number = 2;
+}
+
+message ContextItem.CommitNoteChunk {
+  string note = 1;
+}
+
+message ContextItem.CustomInstructions {
+  string instructions = 1;
+}
+
+message ContextItem.DocumentationChunk {
+  string doc_name = 1;
+  string page_url = 2;
+  string documentation_chunk = 3;
+  float score = 4;
+}
+
+message ContextItem.FileChunk {
+  string relative_workspace_path = 1;
+  string chunk_contents = 2;
+  int32 start_line_number = 3;
+}
+
+message ContextItem.FileDiffHistory {
+  CppFileDiffHistory cpp_file_diff_history = 1;
+  int32 how_many_diffs_ago = 2;
+  bool is_very_recent = 3;
+}
+
+message ContextItem.GoToDefinitionResult {
+  string relative_workspace_path = 1;
+  string line = 2;
+  int32 line_number = 3;
+  int32 column_number = 4;
+  ContextItem.FileChunk definition_chunk = 5;
+}
+
+message ContextItem.Lints {
+  string relative_workspace_path = 1;
+  Lint lints = 2;
+  ContextItem.Lints.Line context_lines = 3;
+}
+
+message ContextItem.Lints.Line {
+  string line = 1;
+  int32 line_number = 2;
+}
+
+message ContextItem.LspSubgraphChunk {
+  LspSubgraphFullContext lsp_subgraph_full_context = 1;
+}
+
+message ContextItem.NotebookCellOutput {
+  string relative_workspace_path = 1;
+  string cell_output = 2;
+  int32 cell_number = 3;
+}
+
+message ContextItem.OutlineChunk {
+  string relative_workspace_path = 1;
+  string contents = 2;
+  LineRange full_range = 3;
+}
+
+message ContextItem.SparseFileChunk {
+  string relative_workspace_path = 1;
+  ContextItem.SparseFileChunk.Line lines = 2;
+  int32 total_number_of_lines_in_file = 3;
+  int32 cell_number = 4;
+}
+
+message ContextItem.SparseFileChunk.Line {
+  string line = 1;
+  int32 line_number = 2;
+}
+
+message ContextItem.TerminalCmdKQuery {
+  string query = 1;
+}
+
+message ContextItem.TerminalCmdKQueryHistory {
+  ContextItem.TerminalCmdKQuery query = 1;
+  /* unresolved */ query_history = 2;
+  string context_item_hashes = 5;
+  string suggested_command = 6;
+}
+
+message ContextItem.TerminalHistory {
+  string history = 1;
+  string cwd_full = 5;
+  string cwd_relative_workspace_path = 6;
+  bool active_for_cmd_k = 4;
+  int64 timestamp = 7;
+  double timestamp_double = 8;
+}
+
+message ContextItemStatus {
+  string context_item_hash = 1;
+  bool shown_to_the_model = 2;
+  float score = 3;
+  float percentage_of_available_space = 4;
+  int32 /* enum */ post_generation_evaluation = 5;
+}
+
+message ContextItemTokenDetail {
+  string relative_workspace_path = 1;
+  int32 count = 2;
+  int32 line_count = 3;
+}
+
+message ContextOptions {
+  ContextOptions.AllDocumentation all_documentation = 1;
+  ContextOptions.CurrentFileContents current_file_contents = 2;
+  ContextOptions.LinterDiagnostics linter_diagnostics = 3;
+  ContextOptions.GlobalContext global_context = 4;
+}
+
+message ContextOptions.AllDocumentation {
+  ContextOptions.AllDocumentation.Documentation available_docs = 1;
+}
+
+message ContextOptions.AllDocumentation.Documentation {
+  string name = 1;
+  string url = 2;
+  string identifier = 3;
+}
+
+message ContextOptions.CurrentFileContents {
+  string relative_workspace_path = 1;
+  string contents = 2;
+  CursorPosition cursor_position = 3;
+  DataframeInfo dataframes = 4;
+  string language_id = 5;
+  CursorRange selection = 6;
+}
+
+message ContextOptions.LinterDiagnostics {
+  string relative_workspace_path = 1;
+  string contents = 2;
+  ContextOptions.LinterDiagnostics.Diagnostic diagnostics = 3;
+}
+
+message ContextOptions.LinterDiagnostics.Diagnostic {
+  string message = 1;
+  string source = 2;
+  CursorRange range = 3;
+  string relative_workspace_path = 4;
+}
+
+message ContextPiece {
+  string relative_workspace_path = 1;
+  string content = 2;
+  float score = 3;
+}
+
+message ContextPieceUpdate {
+  ContextPiece pieces = 1;
+}
+
+message ContextRerankingCandidateFile {
+  string file_name = 1;
+  string file_content = 2;
+}
+
+message ContextRerankingRequest {
+  CurrentFileInfo current_file = 1;
+  ConversationMessage chat_conversation_history = 2;
+  CppFileDiffHistory cpp_diff_trajectories = 3;
+  ContextRerankingCandidateFile candidate_files = 4;
+}
+
+message ContextRerankingResponse {
+  float reranking_scores = 1;
+}
+
+message ContextScoresRequest {
+  string source_range = 1;
+  string method_signatures = 2;
+}
+
+message ContextScoresResponse {
+  float scores = 1;
+}
+
+message ContextStatusUpdate {
+  ContextItemStatus context_item_statuses = 1;
+}
+
+message ContextToRank {
+  string relative_workspace_path = 1;
+  string contents = 2;
+  LineRange line_range = 3;
+  CodeBlock code_block = 4;
+}
+
+message ContextWindowStatus {
+  int32 percentage_remaining = 1;
+  int32 tokens_used = 2;
+  int32 token_limit = 3;
+  float percentage_remaining_float = 4;
+}
+
+message ConversationMessage {
+  string text = 1;
+  int32 /* enum */ type = 2;
+  ConversationMessage.CodeChunk attached_code_chunks = 3;
+  CodeBlock codebase_context_chunks = 4;
+  Commit commits = 5;
+  PullRequest pull_requests = 6;
+  GitDiff git_diffs = 7;
+  SimpleFileDiff assistant_suggested_diffs = 8;
+  InterpreterResult interpreter_results = 9;
+  ImageProto images = 10;
+  string attached_folders = 11;
+  ConversationMessage.ApproximateLintError approximate_lint_errors = 12;
+  string bubble_id = 13;
+  string server_bubble_id = 32;
+  /* unresolved */ attached_folders_new = 14;
+  ConversationMessage.Lints lints = 15;
+  UserResponseToSuggestedCodeBlock user_responses_to_suggested_code_blocks = 16;
+  string relevant_files = 17;
+  ConversationMessage.ToolResult tool_results = 18;
+  ConversationMessage.NotepadContext notepads = 19;
+  bool is_capability_iteration = 20;
+  /* unresolved */ capabilities = 21;
+  ConversationMessage.EditTrailContext edit_trail_contexts = 22;
+  SuggestedCodeBlock suggested_code_blocks = 23;
+  RedDiff diffs_for_compressing_files = 24;
+  LinterErrorsWithoutFileContents multi_file_linter_errors = 25;
+  DiffHistoryData diff_histories = 26;
+  ConversationMessage.CodeChunk recently_viewed_files = 27;
+  ConversationMessage.RecentLocation recent_locations_history = 28;
+  bool is_agentic = 29;
+  ComposerFileDiffHistory file_diff_trajectories = 30;
+  ConversationSummary conversation_summary = 31;
+  bool existed_subsequent_terminal_command = 33;
+  bool existed_previous_terminal_command = 34;
+  DocsReference docs_references = 35;
+  WebReference web_references = 36;
+  AiWebSearchResult ai_web_search_results = 75;
+  ViewableGitContext git_context = 37;
+  ListDirResult attached_folders_list_dir_results = 38;
+  ConversationSummary cached_conversation_summary = 39;
+  ConversationMessage.HumanChange human_changes = 40;
+  bool attached_human_changes = 41;
+  ConversationMessage.ComposerContext summarized_composers = 42;
+  CursorRule cursor_rules = 43;
+  ContextPiece context_pieces = 44;
+  ConversationMessage.Thinking thinking = 45;
+  ConversationMessage.Thinking all_thinking_blocks = 46;
+  int32 /* enum */ thinking_style = 85;
+  int32 /* enum */ unified_mode = 47;
+  ConversationMessage.DiffSinceLastApply diffs_since_last_apply = 48;
+  ConversationMessage.DeletedFile deleted_files = 49;
+  string usage_uuid = 50;
+  int32 /* enum */ supported_tools = 51;
+  CurrentFileLocationData current_file_location_data = 52;
+  bool edit_tool_supports_search_and_replace = 53;
+  string last_terminal_cwd = 54;
+  bool user_explicitly_asked_to_generate_cursor_rules = 55;
+  RCPLogEntry console_logs = 56;
+  string rich_text = 57;
+  ConversationMessage.KnowledgeItem knowledge_items = 58;
+  RCPUIElementPicked ui_element_picked = 59;
+  bool user_explicitly_asked_to_add_to_knowledge_base = 60;
+  ConversationMessage.DocumentationSelection documentation_selections = 61;
+  ComposerExternalLink external_links = 62;
+  bool use_web = 63;
+  ProjectLayout project_layouts = 64;
+  int32 thinking_duration_ms = 65;
+  int32 step_duration_ms = 88;
+  SubagentReturnCall subagent_return = 66;
+  bool is_simple_looping_message = 67;
+  ComposerCapabilityContext capability_contexts = 68;
+  string checkpoint_commit_hash = 69;
+  string git_status_raw = 70;
+  TodoItem todos = 71;
+  bool is_review_edits_followup = 72;
+  string request_id = 74;
+  ConversationMessage.IdeEditorsState ide_editors_state = 73;
+  ContextWindowStatus context_window_status = 76;
+  bool is_plan_execution = 77;
+  string created_at = 78;
+  ModelInfo model_info = 79;
+  bool is_quick_search_query = 80;
+  ConversationMessage.PlanUpdate plan_update = 81;
+  bool is_simulated_msg = 82;
+  int32 /* enum */ simulated_msg_reason = 95;
+  ConversationMessage.McpDescriptor mcp_descriptors = 83;
+  string workspace_project_dir = 84;
+  string workspace_uris = 87;
+  agent.v1.DebugModeConfig debug_mode_config = 86;
+  bytes text_blob_id = 89;
+  bytes rich_text_blob_id = 90;
+  agent.v1.SelectedCursorCommand cursor_commands = 91;
+  bool cursor_commands_explicitly_set = 92;
+  agent.v1.SelectedPastChat past_chats = 93;
+  bool past_chats_explicitly_set = 94;
+}
+
+message ConversationMessage.ApproximateLintError {
+  string message = 1;
+  string value = 2;
+  int32 start_line = 3;
+  int32 end_line = 4;
+  int32 start_column = 5;
+  int32 end_column = 6;
+}
+
+message ConversationMessage.CodeChunk {
+  string relative_workspace_path = 1;
+  int32 start_line_number = 2;
+  string lines = 3;
+  int32 /* enum */ summarization_strategy = 4;
+  string language_identifier = 5;
+  int32 /* enum */ intent = 6;
+  bool is_final_version = 7;
+  bool is_first_version = 8;
+  bool contents_are_missing = 9;
+  bool is_only_included_from_folder = 10;
+  ConversationMessage.CodeChunk.CodeChunkGitContext code_chunk_git_context = 11;
+}
+
+message ConversationMessage.CodeChunk.CodeChunkGitContext {
+  ConversationMessage.CodeChunk.CodeChunkGitContext.CodeChunkGitInfo git_info = 1;
+}
+
+message ConversationMessage.CodeChunk.CodeChunkGitContext.CodeChunkGitInfo {
+  string commit = 1;
+  string author = 2;
+  string date = 3;
+  string message = 4;
+}
+
+message ConversationMessage.ComposerContext {
+  string name = 1;
+  ConversationSummary conversation_summary = 2;
+}
+
+message ConversationMessage.DeletedFile {
+  string relative_workspace_path = 1;
+}
+
+message ConversationMessage.DiffSinceLastApply {
+  string relative_workspace_path = 1;
+  EditFileResult.FileDiff diff = 2;
+  bool is_accepted = 4;
+  bool is_rejected = 5;
+  int32 last_apply_chained_from_n_human_messages_ago = 6;
+}
+
+message ConversationMessage.DocumentationSelection {
+  string doc_id = 1;
+  string name = 2;
+}
+
+message ConversationMessage.EditLocation {
+  string relative_workspace_path = 1;
+  SimplestRange range = 3;
+  SimplestRange initial_range = 4;
+  string context_lines = 5;
+  string text = 6;
+  SimplestRange text_range = 7;
+}
+
+message ConversationMessage.EditTrailContext {
+  string unique_id = 1;
+  ConversationMessage.EditLocation edit_trail_sorted = 2;
+}
+
+message ConversationMessage.HumanChange {
+  string relative_workspace_path = 1;
+  ConversationMessage.RenderedDiff rendered_diffs = 2;
+}
+
+message ConversationMessage.IdeEditorsState {
+  bool is_pill_displayed = 1;
+  string visible_file_paths = 2;
+  string recently_viewed_file_paths = 3;
+  ConversationMessage.IdeEditorsState.File visible_files = 4;
+  ConversationMessage.IdeEditorsState.File recently_viewed_files = 5;
+}
+
+message ConversationMessage.IdeEditorsState.File {
+  string relative_path = 1;
+  bool is_currently_focused = 2;
+  int32 current_line_number = 3;
+  string current_line_text = 4;
+  int32 line_count = 5;
+  string absolute_path = 6;
+}
+
+message ConversationMessage.KnowledgeItem {
+  string title = 1;
+  string knowledge = 2;
+  string knowledge_id = 3;
+  bool is_generated = 4;
+}
+
+message ConversationMessage.Lints {
+  GetLintsForChangeResponse lints = 1;
+  string chat_codeblock_model_value = 2;
+}
+
+message ConversationMessage.McpDescriptor {
+  string folder_path = 1;
+  string server_name = 2;
+  ConversationMessage.McpDescriptor.Tool tools = 3;
+  string server_use_instructions = 4;
+}
+
+message ConversationMessage.McpDescriptor.Tool {
+  string tool_name = 1;
+  string description = 2;
+}
+
+message ConversationMessage.MultiRangeCodeChunk {
+  ConversationMessage.MultiRangeCodeChunk.RangeWithPriority ranges = 1;
+  string content = 2;
+  string relative_workspace_path = 3;
+}
+
+message ConversationMessage.MultiRangeCodeChunk.RangeWithPriority {
+  SimplestRange range = 1;
+  double priority = 2;
+}
+
+message ConversationMessage.NotepadContext {
+  string name = 1;
+  string text = 2;
+  ConversationMessage.CodeChunk attached_code_chunks = 3;
+  string attached_folders = 4;
+  Commit commits = 5;
+  PullRequest pull_requests = 6;
+  GitDiff git_diffs = 7;
+  ImageProto images = 8;
+}
+
+message ConversationMessage.PlanUpdate {
+  string current_plan = 1;
+  bool is_first_time_seen = 2;
+}
+
+message ConversationMessage.RecentLocation {
+  string relative_workspace_path = 1;
+  int32 line_number = 2;
+}
+
+message ConversationMessage.RenderedDiff {
+  int32 start_line_number = 1;
+  int32 end_line_number_exclusive = 2;
+  string before_context_lines = 3;
+  string removed_lines = 4;
+  string added_lines = 5;
+  string after_context_lines = 6;
+}
+
+message ConversationMessage.Thinking {
+  string text = 1;
+  string signature = 2;
+  string redacted_thinking = 3;
+  bool is_last_thinking_chunk = 4;
+}
+
+message ConversationMessage.ToolResult {
+  string tool_call_id = 1;
+  string tool_name = 2;
+  uint32 tool_index = 3;
+  string model_call_id = 12;
+  string args = 4;
+  string raw_args = 5;
+  ConversationMessage.CodeChunk attached_code_chunks = 6;
+  string content = 7;
+  ClientSideToolV2Result result = 8;
+  ToolResultError error = 9;
+  ImageProto images = 10;
+  ClientSideToolV2Call tool_call = 11;
+}
+
+message ConversationMessageHeader {
+  string bubble_id = 1;
+  string server_bubble_id = 2;
+  int32 /* enum */ type = 3;
+}
+
+message ConversationReference {
+  string id = 1;
+  string title = 2;
+  string tldr = 3;
+  string overview = 4;
+  string summary_bullets = 5;
+  string models = 6;
+}
+
+message ConversationStreamMessage {
+  oneof message {
+    /* unresolved */ interaction_update = 1;
+    bytes cloud_agent_state_blob_id = 2;
+    int32 /* enum */ workflow_status = 3;
+    bytes interaction_update_blob_id = 4;
+    TransientError transient_error = 5;
+  }
+}
+
+message ConversationSummary {
+  string summary = 1;
+  string truncation_last_bubble_id_inclusive = 2;
+  string client_should_start_sending_from_inclusive_bubble_id = 3;
+  string previous_conversation_summary_bubble_id = 4;
+  bool includes_tool_results = 5;
+  string strategy = 6;
+}
+
+message ConversationSummaryStarter {
+  string message = 1;
+}
+
+message ConversationSummaryStrategy {
+  oneof strategy {
+    string plain_text_summary = 1;
+    ConversationSummaryStrategy.ArbitrarySummaryPlusToolResultTruncation arbitrary_summary_plus_tool_result_truncation = 2;
+  }
+}
+
+message ConversationSummaryStrategy.ArbitrarySummaryPlusToolResultTruncation {
+  ConversationSummary arbitrary_summary = 1;
+  int32 tool_result_truncation_length = 2;
+}
+
+message CppContextItem {
+  string contents = 1;
+  string symbol = 2;
+  string relative_workspace_path = 3;
+  float score = 4;
+}
+
+message CppStoppedTrackingModelEvent {
+  string model_uuid = 1;
+  string relative_path = 2;
+  int32 /* enum */ reason = 3;
+}
+
+message CreateBackgroundComposerPodRequest {
+  DevcontainerStartingPoint devcontainer_starting_point = 1;
+  bool include_secrets = 2;
+  string force_cluster = 3;
+  string force_machine_template = 4;
+  string client_ip = 32;
+  bool optimistic_prewarming = 5;
+}
+
+message CreateBackgroundComposerPodResponse {
+  string pod_id = 1;
+  string workspace_root_path = 2;
+}
+
+message CreateBackgroundComposerPodSnapshotRequest {
+  string pod_id = 1;
+  int32 /* enum */ visibility = 2;
+  string bc_id = 3;
+}
+
+message CreateBackgroundComposerPodSnapshotResponse {
+  string snapshot_id = 1;
+}
+
+message CreateBackgroundComposerSecretBatchRequest {
+  CreateBackgroundComposerSecretBatchRequest.Secret secrets = 1;
+  bool team_scope = 2;
+  string scoped_to_repos = 3;
+}
+
+message CreateBackgroundComposerSecretBatchRequest.Secret {
+  string name = 1;
+  string value = 2;
+  int32 /* enum */ level = 3;
+}
+
+message CreateBackgroundComposerSecretBatchResponse {
+  CreateBackgroundComposerSecretBatchResponse.Result results = 1;
+}
+
+message CreateBackgroundComposerSecretBatchResponse.Result {
+  string name = 1;
+  int32 /* enum */ status = 2;
+  string error_message = 3;
+  int32 /* enum */ error_type = 4;
+}
+
+message CreateBackgroundComposerSecretRequest {
+  string name = 1;
+  string value = 2;
+  bool team_scope = 3;
+  string scoped_to_repos = 4;
+  int32 /* enum */ level = 5;
+}
+
+message CurrentFileContext {
+  string relative_path = 1;
+  string language = 2;
+  int32 cursor_line = 3;
+  string full_content = 4;
+}
+
+message CursorHelpConversationMessage {
+  string id = 1;
+  string role = 2;
+  string content = 3;
+}
+
+message CursorPredictionModel {
+  string name = 1;
+  int32 radius = 2;
+}
+
+message CustomToolCall {
+  string tool_id = 1;
+  string params = 2;
+}
+
+message CustomToolResult {
+  string tool_id = 1;
+  string result = 2;
+}
+
+message DeepSearchSubagentReturnValue.ContextItem {
+  string file = 1;
+  LineRange line_range = 2;
+  string explanation = 3;
+}
+
+message DeleteSharedConversationRequest {
+  string share_id = 1;
+}
+
+message DeleteSharedConversationResponse {
+  bool success = 1;
+}
+
+message DetailedBackgroundComposer {
+  BackgroundComposer composer = 1;
+  string starting_commit = 2;
+  string base_branch = 3;
+  HeadlessAgenticComposerPrompt prompt = 4;
+  int32 /* enum */ status = 5;
+  GitDiff diff_since_start = 6;
+  ErrorDetails start_error = 7;
+  ModelDetails model_details = 8;
+  bool unread = 9;
+  string summary = 10;
+  EnvironmentPort environment_ports = 11;
+  bool auto_create_pr = 12;
+  bool open_as_cursor_github_app = 13;
+  bool skip_reviewer_request = 14;
+  string local_state_branch = 15;
+  ErrorDetails permanent_error = 16;
+  /* unresolved */ video_annotations = 18;
+  bool auto_branch = 19;
+}
+
+message ErrorToolResult {
+  string error_message = 1;
+}
+
+message ExplicitContext {
+  string context = 1;
+  string repo_context = 2;
+  CursorRule rules = 3;
+  string mode_specific_context = 4;
+  MCPInstructions mcp_instructions = 5;
+}
+
+message FetchBackgroundComposerRequest {
+  string bc_id = 1;
+  int32 start_index = 2;
+  int32 limit = 3;
+}
+
+message FetchBackgroundComposerResponse {
+  HeadlessAgenticComposerResponse responses = 1;
+  int32 total_responses = 2;
+}
+
+message FetchRelevantKnowledgeForConversationRequest {
+  string request_id = 1;
+  ConversationMessage conversation = 2;
+  string git_origin = 3;
+  int32 limit = 4;
+  string tagged_filenames = 5;
+}
+
+message FetchRelevantKnowledgeForConversationResponse {
+  ConversationMessage.KnowledgeItem knowledge_items = 1;
+}
+
+message FilesyncUpdateWithModelVersion {
+  int32 model_version = 1;
+  string relative_workspace_path = 2;
+  SingleUpdateRequest updates = 3;
+  int32 expected_file_length = 4;
+}
+
+message FixMarkersRequest.Marker.ContextRange {
+  int32 start_line = 1;
+  int32 end_line_inclusive = 2;
+}
+
+message GetAggregatedUsageEventsResponse.ModelUsageAggregation {
+  string model_intent = 1;
+  int64 input_tokens = 2;
+  int64 output_tokens = 3;
+  int64 cache_write_tokens = 4;
+  int64 cache_read_tokens = 5;
+  double total_cents = 6;
+  double request_cost = 7;
+  int32 tier = 8;
+}
+
+message GetBackgroundComposerArtifactBytesRequest {
+  string bc_id = 1;
+  string absolute_path = 2;
+}
+
+message GetBackgroundComposerArtifactBytesResponse {
+  bytes content = 1;
+  string content_type = 2;
+}
+
+message GetBackgroundComposerArtifactRequest {
+  string bc_id = 1;
+  string absolute_path = 2;
+}
+
+message GetBackgroundComposerArtifactResponse {
+  string url = 1;
+}
+
+message GetBackgroundComposerChangesHashRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerChangesHashResponse {
+  string hash = 1;
+}
+
+message GetBackgroundComposerConversationRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerConversationResponse {
+  ConversationMessage conversation = 1;
+}
+
+message GetBackgroundComposerDiffDetailsRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerDiffDetailsResponse {
+  string branch_name = 1;
+  string base_branch = 2;
+  BackgroundComposerFullDiff diffs = 3;
+  GitDiff git_diffs = 4;
+}
+
+message GetBackgroundComposerFeedbackLinkResponse {
+  string url = 1;
+}
+
+message GetBackgroundComposerInfoRequest {
+  string bc_id = 1;
+  bool include_diff = 2;
+  bool do_not_throw_if_setup_not_finished = 3;
+}
+
+message GetBackgroundComposerInfoResponse {
+  DetailedBackgroundComposer composer = 1;
+}
+
+message GetBackgroundComposerNameRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerNameResponse {
+  string name = 1;
+}
+
+message GetBackgroundComposerPromptRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerPromptResponse {
+  ConversationMessage prompt = 1;
+}
+
+message GetBackgroundComposerPullRequestRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerPullRequestResponse {
+  string pr_url = 1;
+}
+
+message GetBackgroundComposerRepositoryInfoRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerRepositoryInfoResponse {
+  RepositoryInfo repository_info = 1;
+  string path_encryption_key = 2;
+  QueryOnlyRepoAccess query_only_repo_access = 3;
+}
+
+message GetBackgroundComposerSnapshotInfoRequest {
+  string snapshot_id = 1;
+}
+
+message GetBackgroundComposerSnapshotInfoResponse {
+  string snapshot_id = 1;
+  int32 /* enum */ visibility = 2;
+  string repo_url = 3;
+  double created_at_ms = 4;
+}
+
+message GetBackgroundComposerSnapshotStateRequest {
+  string snapshot_id = 1;
+}
+
+message GetBackgroundComposerSnapshotStateResponse {
+  string snapshot_id = 1;
+  int32 /* enum */ state = 2;
+  string error_message = 3;
+}
+
+message GetBackgroundComposerStatusRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerStatusResponse {
+  int32 /* enum */ status = 1;
+  bool is_unread = 2;
+}
+
+message GetBackgroundComposerUserSettingsResponse {
+  string model_name = 1;
+  bool slack_notifications_for_web_enabled = 2;
+  bool ci_failure_followup_enabled = 3;
+  bool browser_use_enabled = 4;
+  int32 /* enum */ auto_create_pr_setting = 5;
+  int32 /* enum */ pr_review_open_destination = 6;
+  int32 /* enum */ github_artifact_posting = 7;
+  int32 /* enum */ egress_protection_mode = 8;
+  BackgroundComposerUserEgressPolicy egress_policy = 9;
+}
+
+message GetBackgroundComposerVmUsageRequest {
+  string bc_id = 1;
+}
+
+message GetBackgroundComposerVmUsageResponse {
+  int64 total_duration_ms = 1;
+}
+
+message GetBedrockModelsRequest {
+  string access_key = 1;
+  string secret_key = 2;
+  string region = 3;
+}
+
+message GetBedrockModelsResponse {
+  string models = 1;
+  string error = 2;
+}
+
+message GetChatPromptResponse {
+  string prompt = 1;
+  int32 token_count = 2;
+}
+
+message GetChatRequest {
+  CurrentFileInfo current_file = 1;
+  ConversationMessage conversation = 2;
+  RepositoryInfo repositories = 3;
+  ExplicitContext explicit_context = 4;
+  string workspace_root_path = 5;
+  CodeBlock code_blocks = 6;
+  ModelDetails model_details = 7;
+  string documentation_identifiers = 8;
+  string request_id = 9;
+  LinterErrors linter_errors = 10;
+  string summary = 11;
+  int32 summary_up_until_index = 12;
+  bool allow_long_file_scan = 13;
+  bool is_bash = 14;
+  string conversation_id = 15;
+  bool can_handle_filenames_after_language_ids = 16;
+  string use_web = 17;
+  ChatQuote quotes = 18;
+  DebugInfo debug_info = 19;
+  string workspace_id = 20;
+  ChatExternalLink external_links = 21;
+  CommitNote commit_notes = 23;
+  bool long_context_mode = 22;
+  bool is_eval = 24;
+  int32 desired_max_tokens = 26;
+  ContextAST context_ast = 25;
+  bool is_composer = 27;
+  bool runnable_code_blocks = 28;
+  bool should_cache = 29;
+  bool allow_model_fallbacks = 30;
+  int32 number_of_times_shown_fallback_model_warning = 31;
+}
+
+message GetChatSuggestionsRequest {
+  /* unresolved */ recent_chats = 1;
+}
+
+message GetChatSuggestionsResponse {
+  ChatSuggestionItem suggestions = 1;
+}
+
+message GetChatTitleRequest {
+  ConversationMessage conversation = 2;
+}
+
+message GetChatTitleResponse {
+  string title = 1;
+}
+
+message GetComposerAutocompleteRequest {
+  string input_text = 1;
+  string composer_id = 2;
+  ComposerAutocompleteContext context = 3;
+}
+
+message GetComposerAutocompleteResponse {
+  string suggestion = 1;
+}
+
+message GetComposerChatRequest {
+  ConversationMessage conversation = 1;
+  bool allow_long_file_scan = 2;
+  ExplicitContext explicit_context = 3;
+  bool can_handle_filenames_after_language_ids = 4;
+  ModelDetails model_details = 5;
+  LinterErrors linter_errors = 6;
+  string documentation_identifiers = 7;
+  string use_web = 8;
+  ComposerExternalLink external_links = 9;
+  ConversationMessage project_context = 10;
+  GetComposerChatRequest.RedDiff diffs_for_compressing_files = 11;
+  bool compress_edits = 12;
+  bool should_cache = 13;
+  LinterErrors multi_file_linter_errors = 14;
+  CurrentFileInfo current_file = 15;
+  GetComposerChatRequest.RecentEdits recent_edits = 16;
+  bool use_reference_composer_diff_prompt = 17;
+  ComposerFileDiffHistory file_diff_histories = 18;
+  bool use_new_compression_scheme = 19;
+  /* unresolved */ additional_ranked_context = 20;
+  ChatQuote quotes = 21;
+  bool willing_to_pay_extra_for_speed = 22;
+  string conversation_id = 23;
+  bool use_unified_chat_prompt = 24;
+  bool use_full_inputs_context = 25;
+  bool is_resume = 26;
+  string context_bank_session_id = 27;
+  int32 context_bank_version = 28;
+  bytes context_bank_encryption_key = 31;
+  CodeSearchResult uses_codebase_results = 29;
+}
+
+message GetComposerChatRequest.RecentEdits {
+  GetComposerChatRequest.RecentEdits.CodeBlockInfo code_block_info = 1;
+  GetComposerChatRequest.RecentEdits.FileInfo final_file_values = 2;
+  string edits_belong_to_composer_generation_uuid = 3;
+}
+
+message GetComposerChatRequest.RecentEdits.CodeBlockInfo {
+  string relative_workspace_path = 1;
+  string content_before = 2;
+  string content_after = 3;
+  string generation_uuid = 4;
+  int32 version = 5;
+}
+
+message GetComposerChatRequest.RecentEdits.FileInfo {
+  string relative_workspace_path = 1;
+  string content = 2;
+}
+
+message GetComposerChatRequest.RedDiff {
+  string relative_workspace_path = 1;
+  SimplestRange red_ranges = 2;
+  SimplestRange red_ranges_reversed = 3;
+  string start_hash = 4;
+  string end_hash = 5;
+}
+
+message GetDefaultModelNudgeDataResponse {
+  string nudge_date = 1;
+  bool should_default_switch_on_new_chat = 2;
+  string models_with_no_default_switch = 3;
+  string conversion_model_override = 4;
+}
+
+message GetDefaultModelResponse {
+  string model = 1;
+  string thinking_model = 2;
+  bool max_mode = 3;
+  string next_default_set_date = 4;
+}
+
+message GetExplicitContextRequest {
+  string root_path = 1;
+}
+
+message GetExplicitContextResponse {
+  ExplicitContext explicit_context = 1;
+}
+
+message GetFilesForComposerRequest {
+  ConversationMessage conversation = 1;
+  CurrentFileInfo files = 2;
+  bool rerank_results = 3;
+  bool rerank_results_v2 = 6;
+  bool long_context_mode = 7;
+  bool is_eval = 8;
+  string request_id = 9;
+  ModelDetails model_details = 10;
+  oneof context_results {
+    FullFileSearchResult file_search_results = 4;
+    CodeSearchResult code_search_results = 5;
+  }
+}
+
+message GetFilesForComposerResponse {
+  string relative_workspace_paths = 1;
+}
+
+message GetLastDefaultModelNudgeResponse {
+  string nudge_date = 1;
+}
+
+message GetLatestAgentConversationStateRequest {
+  string bc_id = 1;
+}
+
+message GetLatestAgentConversationStateResponse {
+  LatestAgentConversationState latest_conversation_state = 1;
+  PreFetchedBlob pre_fetched_blobs = 2;
+}
+
+message GetModelLabelsResponse {
+  /* unresolved */ model_labels = 1;
+}
+
+message GetModelLabelsResponse.ModelLabel {
+  string name = 1;
+  string label = 2;
+  string short_label = 3;
+  bool supports_agent = 4;
+}
+
+message GetPublicSharedConversationRequest {
+  string share_id = 1;
+}
+
+message GetPublicSharedConversationResponse {
+  SharedConversationMetadata metadata = 1;
+  ConversationMessage messages = 2;
+  bool allow_indexing = 3;
+}
+
+message GetSharedConversationRequest {
+  string share_id = 1;
+}
+
+message GetSharedConversationResponse {
+  SharedConversationMetadata metadata = 1;
+  ConversationMessage messages = 2;
+}
+
+message GetSlackModelOptionsResponse {
+  string model_options = 1;
+}
+
+message GetTeamSharedConversationSettingsRequest {
+  int32 team_id = 1;
+}
+
+message GetTeamSharedConversationSettingsResponse {
+  SharedConversationSettings settings = 1;
+}
+
+message GetTurnSummaryBackgroundComposerRequest {
+  string bc_id = 1;
+  int32 /* enum */ source_type = 2;
+}
+
+message GetTurnSummaryBackgroundComposerResponse {
+  string summary = 1;
+}
+
+message HeadlessAgenticComposerConfig {
+  string chat_model_name = 2;
+  ModelDetails chat_model_details = 5;
+  bool auto_commit = 4;
+  bool is_background = 6;
+  bool auto_create_pr = 7;
+  int32 /* enum */ background_agent_source = 8;
+  bool open_as_cursor_github_app = 9;
+  bool skip_reviewer_request = 10;
+  bool enable_cloud_testing = 11;
+  bool enable_setup_vm_environment_tool = 12;
+  ModelDetails additional_model_details = 13;
+  bool should_synthesize = 14;
+  bool show_onboarding_setup_note_for_manual_testing = 15;
+}
+
+message HeadlessAgenticComposerPrompt {
+  ConversationMessage base_conversation_message = 5;
+  string text = 1;
+  string rich_text = 6;
+  /* unresolved */ file_selections = 2;
+  HeadlessAgenticComposerPrompt.FileAttachment file_attachments = 3;
+  ImageProto images = 4;
+  ConversationMessage conversation_history = 7;
+  string documentation_identifiers = 8;
+  bool use_web = 9;
+  ComposerExternalLink external_links = 10;
+  internapi.v1.BlobDataPerMessage blob_data_per_message = 11;
+}
+
+message HeadlessAgenticComposerPrompt.FileAttachment {
+  string name = 1;
+  string contents = 2;
+}
+
+message HeadlessAgenticComposerPrompt.FileSelection {
+  string relative_workspace_path = 1;
+}
+
+message HeadlessAgenticComposerRepositoryInfo {
+  RepositoryInfo repository_info = 1;
+  string path_encryption_key = 2;
+  bool repository_info_should_query_staging = 3;
+  bool repository_info_should_query_prod = 4;
+  string repo_query_auth_token = 5;
+  bool should_sync_index = 6;
+  QueryOnlyRepoAccess query_only_repo_access = 7;
+}
+
+message HeadlessAgenticComposerResponse {
+  string text = 1;
+  ClientSideToolV2Call tool_call = 2;
+  HeadlessAgenticComposerResponse.FinalToolResult final_tool_result = 3;
+  StreamedBackToolCall streamed_back_tool_call = 6;
+  HeadlessAgenticComposerResponse.UserMessage user_message = 4;
+  bool is_message_done = 5;
+  HeadlessAgenticComposerResponse.Error error = 7;
+  ConversationMessage human_message = 8;
+  ConversationMessage.Thinking thinking = 9;
+  int32 thinking_duration_ms = 10;
+  int32 /* enum */ thinking_style = 12;
+  HeadlessAgenticComposerResponse.Status status = 11;
+}
+
+message HeadlessAgenticComposerResponse.Error {
+  string message = 1;
+  ErrorDetails error_details = 2;
+}
+
+message HeadlessAgenticComposerResponse.FinalToolResult {
+  string tool_call_id = 1;
+  ClientSideToolV2Result result = 2;
+}
+
+message HeadlessAgenticComposerResponse.Status {
+  int32 /* enum */ type = 1;
+  string message = 2;
+  bool is_complete = 3;
+}
+
+message HeadlessAgenticComposerResponse.UserMessage {
+  string text = 1;
+  string rich_text = 2;
+}
+
+message InferBackgroundComposerScriptsRequest {
+  /* unresolved */ commands = 1;
+}
+
+message InferBackgroundComposerScriptsRequest.Command {
+  string command = 1;
+  float timestamp = 2;
+  string cwd = 3;
+}
+
+message InferBackgroundComposerScriptsResponse {
+  string install_script = 1;
+  string start_script = 2;
+  /* unresolved */ terminals = 3;
+}
+
+message InferBackgroundComposerScriptsResponse.Terminal {
+  string name = 1;
+  string command = 2;
+}
+
+message InferenceCoreMessage {
+  int32 /* enum */ role = 1;
+  InferenceToolCall tool_calls = 4;
+  oneof content {
+    string text = 2;
+    InferenceContentParts parts = 3;
+    InferenceToolResultContent tool_content = 6;
+  }
+}
+
+message InferenceModelConfig {
+  int32 max_tokens = 1;
+  float temperature = 2;
+  float top_p = 3;
+  string stop_sequences = 4;
+}
+
+message InferenceResponseMessage {
+  string id = 1;
+  int32 /* enum */ role = 2;
+  string content = 3;
+  InferenceToolCall tool_calls = 4;
+  InferenceToolResultContent tool_result = 5;
+}
+
+message InferenceThinkingStreamPart {
+  string text = 1;
+  string signature = 2;
+  bool is_final = 3;
+}
+
+message InferenceToolCall {
+  string tool_call_id = 1;
+  string tool_name = 2;
+  google.protobuf.Struct args = 3;
+}
+
+message InferenceToolCallStreamPart {
+  string tool_call_id = 1;
+  string tool_name = 2;
+  string args = 3;
+  bool is_complete = 4;
+  int32 tool_index = 5;
+}
+
+message InferenceToolResultContent {
+  InferenceToolResultPart parts = 1;
+}
+
+message InferenceToolResultPart {
+  string tool_call_id = 1;
+  string tool_name = 2;
+  google.protobuf.Value result = 3;
+  bool is_error = 4;
+}
+
+message IngestConversationRequest {
+  string conversation_id = 1;
+  string transcript = 2;
+  string transcript_json = 3;
+  string mode = 4;
+  string model = 5;
+  int64 last_updated_at = 6;
+}
+
+message IngestConversationResponse {
+  bool success = 1;
+  string summary = 2;
+  string detailed_summary = 3;
+  string error_message = 4;
+}
+
+message KeepComposerCacheWarmRequest {
+  GetComposerChatRequest request = 1;
+  string request_id = 2;
+  bool is_composer_visible = 3;
+}
+
+message KeepComposerCacheWarmResponse {
+  bool did_keep_warm = 1;
+}
+
+message LatestAgentConversationState {
+  /* unresolved */ conversation_state = 1;
+  uint32 num_prior_interaction_updates = 2;
+}
+
+message ListBackgroundComposerArtifactsRequest {
+  string bc_id = 1;
+}
+
+message ListBackgroundComposerArtifactsResponse {
+  BackgroundComposerArtifact artifacts = 1;
+}
+
+message ListBackgroundComposerSecretsRequest {
+  bool team_scope = 1;
+}
+
+message ListBackgroundComposerSecretsResponse {
+  ListBackgroundComposerSecretsResponse.Secret secrets = 1;
+}
+
+message ListBackgroundComposerSecretsResponse.Secret {
+  string name = 1;
+  double created_at = 2;
+  string scoped_to_repos = 3;
+  int32 /* enum */ level = 4;
+  int32 id = 5;
+}
+
+message ListBackgroundComposerSnapshotStatusesByBcIdsRequest {
+  string bc_ids = 1;
+  bool use_primary = 2;
+}
+
+message ListBackgroundComposerSnapshotStatusesByBcIdsResponse {
+  BackgroundComposerSnapshotStatusByBcId snapshot_statuses = 1;
+}
+
+message ListBackgroundComposerSnapshotsByBcIdRequest {
+  string bc_id = 1;
+  bool use_primary = 2;
+  uint32 limit = 3;
+}
+
+message ListBackgroundComposerSnapshotsByBcIdResponse {
+  BackgroundComposerSnapshotSummary snapshots = 1;
+}
+
+message ListBackgroundComposersRequest {
+  int32 n = 1;
+  bool include_team_wide = 2;
+  string bc_id = 3;
+  string preferred_repo_url = 4;
+  string additional_repo_urls = 5;
+  bool include_status = 6;
+  int32 /* enum */ include_sources = 7;
+  OwnerFilter owner_filter = 8;
+  double last_message_activity_at_ms_offset = 9;
+  bool include_archived = 10;
+}
+
+message ListBackgroundComposersResponse {
+  BackgroundComposer composers = 1;
+  bool did_load_status = 2;
+  bool has_more = 3;
+  double next_page_offset = 4;
+}
+
+message ListDetailedBackgroundComposersRequest {
+  bool include_team_wide = 1;
+  string bc_id = 2;
+  int32 n = 3;
+  bool include_diff = 4;
+  string cursor = 5;
+  string bc_ids = 6;
+  OwnerFilter owner_filter = 7;
+  string repo_url_prefix = 8;
+  string pr_url = 9;
+}
+
+message ListDetailedBackgroundComposersResponse {
+  DetailedBackgroundComposer composers = 1;
+}
+
+message ListGrindModeComposersRequest {
+  int32 limit = 1;
+}
+
+message ListGrindModeComposersResponse {
+  BackgroundComposer composers = 1;
+}
+
+message ListSharedConversationsRequest {
+  int32 /* enum */ visibility = 1;
+  int32 creator_id = 2;
+  string created_before = 3;
+  int32 /* enum */ visibilities = 4;
+}
+
+message ListSharedConversationsResponse {
+  SharedConversationMetadata shares = 1;
+  bool has_more = 2;
+}
+
+message ListSlackConversationsRequest {
+  string search = 1;
+  bool include_private = 2;
+}
+
+message ListSlackConversationsResponse {
+  SlackConversation conversations = 1;
+  bool has_slack_auth = 2;
+}
+
+message LspSubgraphContextItem {
+  string uri = 1;
+  string type = 2;
+  string content = 3;
+  LspSubgraphRange range = 4;
+}
+
+message LspSubgraphFullContext {
+  string uri = 1;
+  string symbol_name = 2;
+  LspSubgraphPosition positions = 3;
+  LspSubgraphContextItem context_items = 4;
+  float score = 5;
+}
+
+message MakePRBackgroundComposerRequest {
+  string bc_id = 1;
+  string workflow_id = 2;
+}
+
+message MakePRBackgroundComposerResponse {
+  string pr_url = 1;
+  string branch_name = 2;
+  bool has_commits = 3;
+  string owner = 4;
+  string repo = 5;
+}
+
+message MarkBackgroundComposerReadRequest {
+  string bc_id = 1;
+}
+
+message MarkBackgroundComposerUnreadRequest {
+  string bc_id = 1;
+}
+
+message MaybeDefinedPointInTimeModel {
+  string model_uuid = 1;
+  int32 model_version = 2;
+  string relative_path = 3;
+  string model_id = 4;
+}
+
+message MessagePayload {
+  string full_user_message = 1;
+  string full_bot_message = 2;
+}
+
+message MissingContextItems {
+  string missing_context_item_hashes = 2;
+}
+
+message ModelAddedEvent {
+  MaybeDefinedPointInTimeModel point_in_time_model = 1;
+  string full_uri = 2;
+  string model_id = 3;
+  string uri_scheme = 4;
+  bool is_too_large_for_syncing = 5;
+  bool is_too_large_for_tokenization = 6;
+  bool is_too_large_for_heap_operation = 7;
+}
+
+message ModelChange {
+  string text = 1;
+  IRange range = 2;
+  string final_model_hash = 3;
+  int32 model_version_immediately_after_this_change = 4;
+  double performance_now_timestamp = 5;
+  bool is_undoing = 7;
+  bool is_redoing = 8;
+  bool model_is_attached_to_editor = 9;
+  bool model_is_attached_to_the_active_editor = 10;
+  CursorSelection cursor_selections = 11;
+  int32 model_version_at_metadata_retrieval_time = 12;
+  int64 global_index = 13;
+  double performance_now_flush_time = 14;
+  int32 change_index = 15;
+  int32 flush_index = 16;
+  int32 global_index_v2 = 17;
+}
+
+message ModelConfig {
+  map<string, string> /* approx */ deployments = 1;
+}
+
+message ModelDetails {
+  string model_name = 1;
+  string api_key = 2;
+  bool enable_ghost_mode = 3;
+  AzureState azure_state = 4;
+  bool enable_slow_pool = 5;
+  string openai_api_base_url = 6;
+  BedrockState bedrock_state = 7;
+  bool max_mode = 8;
+}
+
+message ModelInfo {
+  string model_name = 1;
+}
+
+message ModelMigration {
+  string id = 1;
+  string model_setting = 2;
+  string target_model = 3;
+  string previous_model = 4;
+  bool migrate_mode_models = 5;
+  bool remove_previous_model = 6;
+  bool max_mode = 7;
+  bool migrate_old_composers_and_current_composer = 8;
+}
+
+message ModelOpenedEvent {
+  PointInTimeModel point_in_time_model = 1;
+  MaybeDefinedPointInTimeModel maybe_defined_point_in_time_model = 2;
+}
+
+message ModelParameterDefinition {
+  string id = 1;
+  string name = 2;
+  string markdown_tooltip = 3;
+  ModelParameterDefinition.ModelParameterType parameter_type = 4;
+  bool is_cycleable_by_hotkey = 5;
+}
+
+message ModelParameterDefinition.EnumParameterDefinition {
+  ModelParameterDefinition.EnumParameterDefinition.EnumParameterValue values = 1;
+}
+
+message ModelParameterDefinition.EnumParameterDefinition.EnumParameterValue {
+  string value = 1;
+  string display_name = 2;
+}
+
+message ModelParameterDefinition.ModelParameterType {
+  ModelParameterDefinition.BooleanParameterDefinition boolean_parameter = 1;
+  ModelParameterDefinition.EnumParameterDefinition enum_parameter = 2;
+}
+
+message ModelQueryRequest {
+  CurrentFileInfo current_file = 1;
+  ConversationMessage conversation = 2;
+  RepositoryInfo repositories = 3;
+  ExplicitContext explicit_context = 4;
+  string workspace_root_path = 5;
+  CodeBlock code_blocks = 6;
+  ModelDetails model_details = 7;
+  int32 /* enum */ query_type = 8;
+  RepositoryInfo repository_info = 9;
+  bool faster_and_stupider = 10;
+  bool use_globs = 11;
+}
+
+message ModelQueryResponse {
+  ModelQueryResponse.Query queries = 1;
+}
+
+message ModelQueryResponse.Query {
+  string query = 1;
+  bool successful_parse = 2;
+  string good_file_extensions = 3;
+  string bad_file_extensions = 4;
+  string good_paths = 5;
+  string bad_paths = 6;
+}
+
+message ModelQueryResponseV2 {
+  oneof query_or_reasoning {
+    ModelQueryResponseV2.QueryItem query = 1;
+    string reasoning = 2;
+  }
+}
+
+message ModelQueryResponseV2.QueryItem {
+  int32 index = 3;
+  oneof partial_query {
+    string text = 1;
+    string glob = 2;
+  }
+}
+
+message ModelWithHistory {
+  ModelChange changes = 1;
+  string model_uuid = 2;
+  StartingModel starting_model = 3;
+  int32 num_correct_changes = 4;
+  int32 num_unvalidated_changes = 5;
+  int32 num_incorrect_changes = 6;
+  ModelChange before_start_model_changes = 7;
+  double starting_performance_now_timestamp = 8;
+}
+
+message NotifyBackgroundComposerShownRequest {
+  string bc_id = 1;
+}
+
+message NudgeMessage {
+  string raw_message = 1;
+}
+
+message OpenPRBackgroundComposerRequest {
+  string bc_id = 1;
+  string title = 2;
+  string body = 3;
+  string base_branch = 4;
+  bool draft = 5;
+  bool open_as_cursor_github_app = 6;
+  bool skip_reviewer_request = 7;
+  bytes agent_state_blob_id = 8;
+  string workflow_id = 9;
+}
+
+message OpenPRBackgroundComposerResponse {
+  string pr_url = 1;
+  int32 pr_number = 2;
+  string branch_name = 3;
+  string base_branch = 4;
+  bool success = 5;
+  string error = 6;
+}
+
+message PauseBackgroundComposerRequest {
+  string bc_id = 1;
+  int32 /* enum */ source = 3;
+}
+
+message PointInTimeModel {
+  string model_uuid = 1;
+  int32 model_version = 2;
+  string relative_path = 3;
+  string model_id = 4;
+}
+
+message PotentiallyCachedContextItem {
+  oneof item {
+    ContextItem context_item = 1;
+    string context_item_hash = 2;
+  }
+}
+
+message PureMessage {
+  int32 /* enum */ message_type = 1;
+  string content = 2;
+}
+
+message RCPChatMessage {
+  string text = 1;
+}
+
+message RCPMessage {
+  oneof message {
+    RCPLogEntry console = 1;
+    RCPUIElementPicked ui_element_picked = 2;
+    RCPChatMessage chat_message = 3;
+  }
+}
+
+message RankedContext {
+  ContextToRank context = 1;
+  float score = 2;
+}
+
+message RecentChat {
+  string title = 1;
+  int64 timestamp = 2;
+  string summary = 3;
+  RecentChatMessage messages = 4;
+  string todos = 5;
+}
+
+message RecentChatMessage {
+  string role = 1;
+  string text = 2;
+  string context = 3;
+}
+
+message RefreshGithubAccessTokenInBackgroundComposerRequest {
+  string bc_id = 1;
+}
+
+message RefreshTabContextRequest {
+  CurrentFileInfo current_file = 1;
+  string model_name = 2;
+  LinterErrors linter_errors = 3;
+  CppFileDiffHistory file_diff_histories = 4;
+  AdditionalFile additional_files = 5;
+  double client_time = 6;
+  double time_since_request_start = 7;
+  double time_at_request_send = 8;
+  bool is_debug = 9;
+  string workspace_id = 10;
+  bool supports_cpt = 11;
+  bool supports_crlf_cpt = 12;
+  RepositoryInfo repository_info = 13;
+}
+
+message RefreshTabContextResponse {
+  CodeResult code_results = 1;
+}
+
+message RenameBackgroundComposerRequest {
+  string bc_id = 1;
+  string new_name = 2;
+}
+
+message RenameBackgroundComposerResponse {
+  string name = 1;
+}
+
+message RerankCmdKContextRequest {
+  PotentiallyCachedContextItem context_items = 1;
+  /* unresolved */ legacy_context = 3;
+  CmdKOptions cmd_k_options = 2;
+}
+
+message RerankCmdKContextResponse {
+  bool did_call = 3;
+  oneof response {
+    ContextStatusUpdate context_status_update = 1;
+    MissingContextItems missing_context_items = 2;
+  }
+}
+
+message RerankTerminalCmdKContextRequest {
+  PotentiallyCachedContextItem context_items = 1;
+  TerminalCmdKOptions cmd_k_options = 2;
+}
+
+message RerankTerminalCmdKContextResponse {
+  oneof response {
+    ContextStatusUpdate context_status_update = 1;
+    MissingContextItems missing_context_items = 2;
+  }
+}
+
+message ResumeBackgroundComposerRequest {
+  string bc_id = 1;
+}
+
+message ReviewChatMessage {
+  string text = 1;
+  int32 /* enum */ type = 2;
+}
+
+message ReviewChatRequest {
+  string chunk = 1;
+  string file_context = 2;
+  LineRange chunk_range = 3;
+  ReviewChatMessage messages = 4;
+}
+
+message ReviewChatRequestV2 {
+  File file = 1;
+  ReviewBugV2 bug = 2;
+  string linter_rules = 3;
+  ReviewChatMessage messages = 4;
+}
+
+message ReviewChatResponse {
+  string text = 1;
+  bool should_resolve = 2;
+}
+
+message ReviewChatResponseV2 {
+  string text = 1;
+}
+
+message RevokeBackgroundComposerSecretRequest {
+  string name = 1;
+  bool team_scope = 2;
+  int32 id = 3;
+}
+
+message RipgrepSearchResultInternal.ITextSearchCompleteMessage {
+  string text = 1;
+  int32 /* enum */ type = 2;
+  bool trusted = 3;
+}
+
+message RipgrepSearchResultInternal.ITextSearchContext {
+  string uri = 1;
+  string text = 2;
+  int32 line_number = 3;
+}
+
+message ScoredCodebaseContext {
+  CodeResult codebase_context = 1;
+}
+
+message SearchRepositoryDeepContextRequest {
+  string query = 1;
+  int32 top_k = 2;
+  int32 top_reflections_k = 3;
+  string index_ids = 4;
+  bool use_model_on_files = 5;
+  bool use_reflections = 6;
+}
+
+message SearchRepositoryDeepContextResponse {
+  NodeResult top_nodes = 1;
+  ReflectionResult reflections = 2;
+  string index_id = 3;
+}
+
+message SerializedContextNode {
+  string workspace_relative_path = 1;
+  int32 start_line_number = 2;
+  int32 end_line_number = 3;
+  /* unresolved */ children = 4;
+  FileCodeSnippets node_snippets = 5;
+}
+
+message ShareConversationRequest {
+  string conversation_id = 1;
+  string title = 2;
+  int32 /* enum */ visibility = 3;
+  ConversationMessage messages = 4;
+}
+
+message ShareConversationResponse {
+  string share_id = 1;
+  string share_url = 2;
+  int32 redactions = 3;
+}
+
+message SharedConversationCreator {
+  int32 user_id = 1;
+  string first_name = 2;
+}
+
+message SharedConversationMetadata {
+  string id = 1;
+  string title = 2;
+  int32 /* enum */ visibility = 3;
+  string created_at = 4;
+  SharedConversationCreator creator = 5;
+}
+
+message SharedConversationSettings {
+  bool enabled = 1;
+  int32 /* enum */ allowed_visibilities = 2;
+  bool allow_public_indexing = 3;
+}
+
+message SharedConversationSnapshot {
+  ConversationMessage messages = 1;
+}
+
+message SimpleUnaryCrossExtensionHostMessage {
+  bytes message = 1;
+  CrossExtHostHeaders header = 2;
+  CrossExtHostHeaders trailer = 3;
+  bool is_error = 4;
+  string connect_error = 5;
+}
+
+message SlackConversation {
+  string id = 1;
+  string name = 2;
+  int32 /* enum */ type = 3;
+  bool is_private = 4;
+}
+
+message SpanContext {
+  string trace_id = 1;
+  string span_id = 2;
+  uint32 trace_flags = 3;
+  string trace_state = 4;
+}
+
+message StartBackgroundComposerFromSnapshotRequest {
+  string snapshot_name_or_id = 1;
+  DevcontainerStartingPoint devcontainer_starting_point = 11;
+  string prompt = 2;
+  string rich_prompt = 17;
+  StartBackgroundComposerFromSnapshotRequest.File files = 3;
+  ModelDetails model_details = 4;
+  ModelDetails additional_model_details = 16;
+  agent.v1.RequestedModel requested_models = 58;
+  HeadlessAgenticComposerRepositoryInfo repository_info = 5;
+  string snapshot_workspace_root_path = 6;
+  string start_for_auth_id_on_team = 8;
+  bool auto_branch = 9;
+  bool return_immediately = 10;
+  string force_vm_backend = 12;
+  string force_cluster = 15;
+  string force_machine_template = 29;
+  ImageProto images = 13;
+  string repo_url = 14;
+  ConversationMessage conversation_history = 18;
+  int32 /* enum */ source = 23;
+  string documentation_identifiers = 19;
+  bool use_web = 20;
+  ComposerExternalLink external_links = 21;
+  string bc_id = 22;
+  string slack_channel_id = 24;
+  string slack_message_timestamp = 25;
+  string slack_team_id = 27;
+  string linear_issue_id = 28;
+  string github_issue_id = 40;
+  bool add_initial_message_to_responses = 26;
+  string linear_org_id = 30;
+  string linear_issue_identifier = 33;
+  string base_branch = 31;
+  string custom_branch_name = 38;
+  string client_ip = 32;
+  string prompt_group_id = 34;
+  bool should_synthesize = 53;
+  string pod_id = 35;
+  bool wait_on_branch_name = 36;
+  bool auto_create_pr = 37;
+  StartBackgroundComposerFromSnapshotRequest.WebhookConfig webhook_config = 39;
+  int32 /* enum */ starting_message_type = 41;
+  bool open_as_cursor_github_app = 42;
+  bool skip_reviewer_request = 43;
+  agent.v1.ConversationAction conversation_action = 44;
+  bool test_mode_enabled = 45;
+  bool skip_user_install_commands_and_cloud_testing = 60;
+  string agent_session_id = 46;
+  /* unresolved */ conversation_state = 47;
+  PreFetchedBlob pre_fetched_blobs = 48;
+  string kickoff_message_id = 49;
+  string name = 50;
+  bool enable_setup_vm_environment_tool = 51;
+  GrindModeConfig grind_mode_config = 52;
+  string automation_id = 73;
+  bool use_private_worker = 55;
+  PrivateWorkerLabel labels = 59;
+  bool force_non_chargeable = 56;
+  string pr_url = 57;
+  BcsEgressPolicy egress_policy = 74;
+  int32 /* enum */ effort_mode = 75;
+  bool auto_proceed_after_planning = 76;
+  int64 time_budget_seconds = 77;
+  int64 time_budget_ms = 78;
+}
+
+message StartBackgroundComposerFromSnapshotRequest.File {
+  string relative_workspace_path = 1;
+  string contents = 2;
+}
+
+message StartBackgroundComposerFromSnapshotRequest.WebhookConfig {
+  string url = 1;
+  string secret = 2;
+}
+
+message StartBackgroundComposerFromSnapshotResponse {
+  BackgroundComposer composer = 1;
+  bool was_swapped_to_default = 2;
+}
+
+message StartingModel {
+  string relative_path = 1;
+  string starting_contents = 2;
+  int32 starting_model_version = 3;
+  ModelChange before_start_model_changes = 4;
+  string client_version = 5;
+  string client_commit = 6;
+  string model_uuid = 7;
+  string session_id = 8;
+  string uri = 9;
+}
+
+message StreamBackgroundComposerArtifactRequest {
+  string bc_id = 1;
+  string absolute_path = 2;
+}
+
+message StreamBackgroundComposerArtifactResponse {
+  bytes content_chunk = 1;
+  string content_type = 2;
+  int64 total_size = 3;
+}
+
+message StreamBugBotAgenticClientMessage {
+  oneof message {
+    StreamBugBotRequest start = 1;
+    agent.v1.ExecClientMessage exec_client_message = 2;
+    agent.v1.ExecClientControlMessage exec_client_control_message = 3;
+  }
+}
+
+message StreamBugBotAgenticServerMessage {
+  oneof message {
+    StreamBugBotResponse bugbot_response = 1;
+    agent.v1.ExecServerMessage exec_server_message = 2;
+    /* unresolved */ exec_server_control_message = 3;
+  }
+}
+
+message StreamChatContextRequest {
+  CurrentFileInfo current_file = 1;
+  ConversationMessage conversation = 2;
+  RepositoryInfo repositories = 3;
+  ExplicitContext explicit_context = 4;
+  string workspace_root_path = 5;
+  CodeBlock code_blocks = 6;
+  ModelDetails model_details = 7;
+  string documentation_identifiers = 8;
+  string query = 9;
+  /* unresolved */ code_context = 10;
+  bool rerank_results = 11;
+  LinterErrors linter_errors = 14;
+  bool is_bash = 15;
+  bool rerank_results_v2 = 16;
+  string conversation_id = 17;
+  bool can_handle_filenames_after_language_ids = 18;
+  bool long_context_mode = 19;
+  bool is_eval = 20;
+  string request_id = 21;
+  int32 desired_max_tokens = 22;
+  bool runnable_code_blocks = 23;
+  oneof context_results {
+    FullFileSearchResult file_search_results = 12;
+    CodeSearchResult code_search_results = 13;
+  }
+}
+
+message StreamChatContextRequest.CodeContext {
+  CodeBlock chunks = 1;
+  CodeResult scored_chunks = 2;
+}
+
+message StreamChatContextResponse {
+  string text = 1;
+  string debugging_only_chat_prompt = 2;
+  int32 debugging_only_token_count = 3;
+  DocumentationCitation document_citation = 4;
+  string filled_prompt = 5;
+  StreamChatContextResponse.UsedCode used_code = 6;
+  StreamChatContextResponse.CodeLink code_link = 7;
+  StreamChatContextResponse.ChunkIdentity chunk_identity = 8;
+  DocsReference docs_reference = 9;
+  SymbolLink symbol_link = 10;
+  FileLink file_link = 11;
+}
+
+message StreamChatContextResponse.ChunkIdentity {
+  string file_name = 1;
+  int32 start_line = 2;
+  int32 end_line = 3;
+  string text = 4;
+  int32 /* enum */ chunk_type = 5;
+}
+
+message StreamChatContextResponse.CodeLink {
+  string relative_workspace_path = 1;
+  int32 start_line_number = 2;
+  int32 end_line_number = 3;
+}
+
+message StreamChatContextResponse.UsedCode {
+  CodeResult code_results = 1;
+}
+
+message StreamChatDeepContextRequest {
+  ConversationMessage conversation = 1;
+  ExplicitContext explicit_context = 2;
+  ModelDetails model_details = 3;
+  SearchRepositoryDeepContextResponse context_results = 4;
+  bool rerank_results = 5;
+}
+
+message StreamChatDeepContextResponse {
+  string text = 1;
+}
+
+message StreamChatResponse {
+  string text = 1;
+  string server_bubble_id = 22;
+  string debugging_only_chat_prompt = 2;
+  int32 debugging_only_token_count = 3;
+  DocumentationCitation document_citation = 4;
+  string filled_prompt = 5;
+  bool is_big_file = 6;
+  string intermediate_text = 7;
+  bool is_using_slow_request = 10;
+  StreamChatResponse.ChunkIdentity chunk_identity = 8;
+  DocsReference docs_reference = 9;
+  WebCitation web_citation = 11;
+  StatusUpdates status_updates = 12;
+  ServerTimingInfo timing_info = 13;
+  SymbolLink symbol_link = 14;
+  FileLink file_link = 15;
+  ConversationSummary conversation_summary = 16;
+  ServiceStatusUpdate service_status_update = 17;
+  StreamChatResponse.UsedCode used_code = 18;
+  bool stop_using_dsv3_agentic_model = 26;
+  string usage_uuid = 27;
+}
+
+message StreamChatResponse.ChunkIdentity {
+  string file_name = 1;
+  int32 start_line = 2;
+  int32 end_line = 3;
+  string text = 4;
+  int32 /* enum */ chunk_type = 5;
+}
+
+message StreamChatResponse.UsedCode {
+  CodeResult code_results = 1;
+}
+
+message StreamChatToolformerContinueRequest {
+  string toolformer_session_id = 1;
+  ToolResult tool_result = 2;
+}
+
+message StreamChatToolformerResponse {
+  string toolformer_session_id = 1;
+  oneof response_type {
+    StreamChatToolformerResponse.Output output = 2;
+    StreamChatToolformerResponse.ToolAction tool_action = 3;
+    StreamChatToolformerResponse.Thought thought = 4;
+  }
+}
+
+message StreamChatToolformerResponse.Output {
+  string text = 1;
+}
+
+message StreamChatToolformerResponse.Thought {
+  string text = 1;
+}
+
+message StreamChatToolformerResponse.ToolAction {
+  string user_facing_text = 1;
+  string raw_model_output = 3;
+  ToolCall tool_call = 2;
+  bool more_to_come = 4;
+}
+
+message StreamCmdKResponse.Chat {
+  string text = 1;
+}
+
+message StreamCmdKResponseContextWrapped {
+  oneof response {
+    StreamCmdKResponse real_response = 1;
+    ContextStatusUpdate context_status_update = 2;
+    MissingContextItems missing_context_items = 3;
+  }
+}
+
+message StreamComposerContextRequest {
+  CurrentFileInfo current_file = 1;
+  ConversationMessage conversation = 2;
+  RepositoryInfo repositories = 3;
+  ExplicitContext explicit_context = 4;
+  string workspace_root_path = 5;
+  CodeBlock code_blocks = 6;
+  ModelDetails model_details = 7;
+  string documentation_identifiers = 8;
+  string query = 9;
+  StreamComposerContextRequest.CodeContext code_context = 10;
+  bool rerank_results = 11;
+  LinterErrors linter_errors = 14;
+  bool is_bash = 15;
+  bool rerank_results_v2 = 16;
+  string conversation_id = 17;
+  bool can_handle_filenames_after_language_ids = 18;
+  bool long_context_mode = 19;
+  bool is_eval = 20;
+  string request_id = 21;
+  int32 desired_max_tokens = 22;
+  bool runnable_code_blocks = 23;
+  oneof context_results {
+    FullFileSearchResult file_search_results = 12;
+    CodeSearchResult code_search_results = 13;
+  }
+}
+
+message StreamComposerContextRequest.CodeContext {
+  CodeBlock chunks = 1;
+  CodeResult scored_chunks = 2;
+}
+
+message StreamConversationRequest {
+  string bc_id = 1;
+  string offset_key = 2;
+  bool filter_heavy_step_data = 3;
+  bool should_send_prefetched_blobs_first = 4;
+  bytes pre_fetched_blob_ids = 5;
+  bool prefetch_only_last_step_per_turn = 6;
+  bool send_stream_signal_after_prefetch = 7;
+  uint32 max_blobs_after_prefetch = 8;
+}
+
+message StreamConversationResponse {
+  oneof message {
+    StreamConversationResponse.InitialState initial_state = 3;
+    StreamConversationResponse.InteractionUpdateWithOffset interaction_update_with_offset = 4;
+    StreamConversationResponse.CloudAgentStateWithIdAndOffset cloud_agent_state_with_id_and_offset = 5;
+    StreamConversationResponse.WorkflowStatusWithOffset workflow_status_with_offset = 6;
+    StreamConversationResponse.PrefetchedBlobs prefetched_blobs = 7;
+    int32 /* enum */ stream_signal = 8;
+    StreamConversationResponse.TransientErrorWithOffset transient_error_with_offset = 9;
+    StreamConversationResponse.DevBannerMessage dev_banner_message = 10;
+  }
+}
+
+message StreamConversationResponse.CloudAgentStateWithIdAndOffset {
+  string offset_key = 1;
+  bytes blob_id = 2;
+  CloudAgentState cloud_agent_state = 3;
+  PreFetchedBlob pre_fetched_blobs = 4;
+}
+
+message StreamConversationResponse.DevBannerMessage {
+  string text = 1;
+}
+
+message StreamConversationResponse.InitialState {
+  bytes blob_id = 1;
+  CloudAgentState cloud_agent_state = 2;
+  PreFetchedBlob pre_fetched_blobs = 4;
+  int32 /* enum */ workflow_status = 5;
+}
+
+message StreamConversationResponse.InteractionUpdateWithOffset {
+  string offset_key = 1;
+  /* unresolved */ interaction_update = 2;
+}
+
+message StreamConversationResponse.PrefetchedBlobs {
+  PreFetchedBlob pre_fetched_blobs = 1;
+}
+
+message StreamConversationResponse.TransientErrorWithOffset {
+  string offset_key = 1;
+  TransientError transient_error = 2;
+}
+
+message StreamConversationResponse.WorkflowStatusWithOffset {
+  string offset_key = 1;
+  int32 /* enum */ workflow_status = 2;
+}
+
+message StreamCppResponse.ModelInfo {
+  bool is_fused_cursor_prediction_model = 1;
+  bool is_multidiff_model = 2;
+}
+
+message StreamGetRelevantChunksResponseContextWrapped {
+  oneof response {
+    GetRelevantChunksResponse real_response = 1;
+  }
+}
+
+message StreamInlineLongCompletionRequest.ContextBlock {
+  int32 /* enum */ context_type = 1;
+  CodeBlock blocks = 2;
+}
+
+message StreamReplayChatRequest {
+  string request_id = 1;
+  double tokens_per_second = 3;
+}
+
+message StreamSlashEditFollowUpWithPreviousEditsResponse.Chat {
+  string text = 1;
+}
+
+message StreamTerminalCmdKResponse.Chat {
+  string text = 1;
+}
+
+message StreamTerminalCmdKResponseContextWrapped {
+  oneof response {
+    StreamTerminalCmdKResponse real_response = 1;
+    ContextStatusUpdate context_status_update = 2;
+    MissingContextItems missing_context_items = 3;
+  }
+}
+
+message StreamUiBestOfNJudgeClientMessage {
+  oneof message {
+    StreamUiBestOfNJudgeStartRequest start = 1;
+    agent.v1.ExecClientMessage exec_client_message = 2;
+    agent.v1.ExecClientControlMessage exec_client_control_message = 3;
+  }
+}
+
+message StreamUiBestOfNJudgeServerMessage {
+  oneof message {
+    UiBestOfNJudgeFinalResult final_result = 1;
+    agent.v1.ExecServerMessage exec_server_message = 2;
+    /* unresolved */ exec_server_control_message = 3;
+  }
+}
+
+message StreamUnifiedChatRequest {
+  ConversationMessage conversation = 1;
+  ConversationMessageHeader full_conversation_headers_only = 30;
+  bool allow_long_file_scan = 2;
+  ExplicitContext explicit_context = 3;
+  bool can_handle_filenames_after_language_ids = 4;
+  ModelDetails model_details = 5;
+  LinterErrors linter_errors = 6;
+  string documentation_identifiers = 7;
+  string use_web = 8;
+  ComposerExternalLink external_links = 9;
+  ConversationMessage project_context = 10;
+  StreamUnifiedChatRequest.RedDiff diffs_for_compressing_files = 11;
+  bool compress_edits = 12;
+  bool should_cache = 13;
+  LinterErrors multi_file_linter_errors = 14;
+  CurrentFileInfo current_file = 15;
+  StreamUnifiedChatRequest.RecentEdits recent_edits = 16;
+  bool use_reference_composer_diff_prompt = 17;
+  ComposerFileDiffHistory file_diff_histories = 18;
+  bool use_new_compression_scheme = 19;
+  ChatQuote quotes = 21;
+  /* unresolved */ additional_ranked_context = 20;
+  bool is_chat = 22;
+  string conversation_id = 23;
+  string replying_to_request_id = 72;
+  RepositoryInfo repository_info = 24;
+  bool repository_info_should_query_staging = 25;
+  bool repository_info_should_query_prod = 39;
+  QueryOnlyRepoAccess query_only_repo_access = 52;
+  string repo_query_auth_token = 44;
+  EnvironmentInfo environment_info = 26;
+  bool is_agentic = 27;
+  ConversationSummary conversation_summary = 28;
+  int32 /* enum */ supported_tools = 29;
+  bool enable_yolo_mode = 31;
+  string yolo_prompt = 32;
+  bool use_unified_chat_prompt = 33;
+  MCPParams.Tool mcp_tools = 34;
+  bool use_full_inputs_context = 35;
+  bool is_resume = 36;
+  bool allow_model_fallbacks = 37;
+  int32 number_of_times_shown_fallback_model_warning = 38;
+  string context_bank_session_id = 40;
+  int32 context_bank_version = 41;
+  bytes context_bank_encryption_key = 43;
+  bool is_headless = 45;
+  bool is_background_composer = 68;
+  StreamUnifiedChatRequest.CodeSearchResult uses_codebase_results = 42;
+  int32 /* enum */ unified_mode = 46;
+  int32 /* enum */ tools_requiring_accepted_return = 47;
+  bool should_disable_tools = 48;
+  int32 /* enum */ thinking_level = 49;
+  bool should_use_chat_prompt = 50;
+  string background_composer_id = 55;
+  bool uses_rules = 51;
+  bool mode_uses_auto_apply = 53;
+  string unified_mode_name = 54;
+  bool use_generate_rules_prompt = 56;
+  bool edit_tool_supports_search_and_replace = 57;
+  ProjectLayout project_layouts = 58;
+  string repository_name_if_unindexed = 59;
+  double indexing_progress = 60;
+  StreamUnifiedChatRequest.FullFileCmdKOptions full_file_cmd_k_options = 61;
+  string indexing_phase_if_unindexed = 62;
+  bool use_knowledge_base_prompt = 63;
+  int32 indexing_num_files_if_unindexed = 64;
+  SubagentInfo subagent_info = 66;
+  bool supports_git_index = 67;
+  bool force_is_not_dev = 69;
+  bool disable_edit_file_timeout = 70;
+  bool should_attach_linter_errors = 71;
+  bool should_speculatively_route_gpt5 = 73;
+  bool force_terminal_hanging_detection = 74;
+  bool force_summarization = 75;
+  bool is_quick_search_query = 76;
+  bool is_spec_mode = 77;
+  bool allow_server_side_semantic_search = 78;
+  bytes speculative_summarization_encryption_key = 79;
+  WorkspaceFolder workspace_folders = 81;
+  bool does_readfile_support_images = 82;
+  bool sandboxing_support_enabled = 83;
+  string custom_planning_instructions = 84;
+  bool enable_terminal_file_persistence = 85;
+  string terminals_folder = 86;
+  string agent_transcripts_folder = 93;
+  string agent_notes_folder = 87;
+  string agent_tools_folder = 88;
+  StreamUnifiedChatRequest.CurrentPlan current_plan = 89;
+  bool has_mcp_descriptors = 90;
+  string best_of_n_group_id = 91;
+  bool try_use_best_of_n_promotion = 92;
+}
+
+message StreamUnifiedChatRequest.CodeSearchResult {
+  CodeResult results = 1;
+  File all_files = 2;
+}
+
+message StreamUnifiedChatRequest.CurrentPlan {
+  string content = 1;
+  string name = 2;
+}
+
+message StreamUnifiedChatRequest.FullFileCmdKOptions {
+  string file_path = 1;
+}
+
+message StreamUnifiedChatRequest.RecentEdits {
+  /* unresolved */ code_block_info = 1;
+  StreamUnifiedChatRequest.RecentEdits.FileInfo final_file_values = 2;
+  string edits_belong_to_composer_generation_uuid = 3;
+}
+
+message StreamUnifiedChatRequest.RecentEdits.CodeBlockInfo {
+  string relative_workspace_path = 1;
+  string content_before = 2;
+  string content_after = 3;
+  string generation_uuid = 4;
+  int32 version = 5;
+}
+
+message StreamUnifiedChatRequest.RecentEdits.FileInfo {
+  string relative_workspace_path = 1;
+  string content = 2;
+}
+
+message StreamUnifiedChatRequest.RedDiff {
+  string relative_workspace_path = 1;
+  SimplestRange red_ranges = 2;
+  SimplestRange red_ranges_reversed = 3;
+  string start_hash = 4;
+  string end_hash = 5;
+}
+
+message StreamUnifiedChatRequestWithTools {
+  oneof request {
+    StreamUnifiedChatRequest stream_unified_chat_request = 1;
+    ClientSideToolV2Result client_side_tool_v2_result = 2;
+  }
+}
+
+message StreamUnifiedChatRequestWithToolsIdempotent {
+  string idempotency_key = 4;
+  uint32 seqno = 5;
+  oneof request {
+    StreamUnifiedChatRequestWithTools client_chunk = 1;
+    google.protobuf.Empty abort = 2;
+    google.protobuf.Empty close = 3;
+  }
+}
+
+message StreamUnifiedChatResponse {
+  string text = 1;
+  string server_bubble_id = 22;
+  string debugging_only_chat_prompt = 2;
+  int32 debugging_only_token_count = 3;
+  DocumentationCitation document_citation = 4;
+  string filled_prompt = 5;
+  bool is_big_file = 6;
+  string intermediate_text = 7;
+  bool is_using_slow_request = 10;
+  StreamUnifiedChatResponse.ChunkIdentity chunk_identity = 8;
+  DocsReference docs_reference = 9;
+  WebCitation web_citation = 11;
+  AiWebSearchResults ai_web_search_results = 33;
+  StatusUpdates status_updates = 12;
+  StreamedBackToolCall tool_call = 13;
+  StreamedBackToolCallV2 tool_call_v2 = 36;
+  bool should_break_ai_message = 14;
+  StreamedBackPartialToolCall partial_tool_call = 15;
+  StreamUnifiedChatResponse.FinalToolResult final_tool_result = 16;
+  SymbolLink symbol_link = 17;
+  FileLink file_link = 19;
+  ConversationSummary conversation_summary = 18;
+  ServiceStatusUpdate service_status_update = 20;
+  ViewableGitContext viewable_git_context = 21;
+  ContextPieceUpdate context_piece_update = 23;
+  StreamUnifiedChatResponse.UsedCode used_code = 24;
+  ConversationMessage.Thinking thinking = 25;
+  int32 /* enum */ thinking_style = 37;
+  bool stop_using_dsv3_agentic_model = 26;
+  string usage_uuid = 27;
+  /* unresolved */ conversation_summary_starter = 28;
+  SubagentReturnCall subagent_return = 29;
+  ContextWindowStatus context_window_status = 30;
+  StreamUnifiedChatResponse.ImageDescription image_description = 31;
+  bool parallel_tool_calls_complete = 32;
+  StarsFeedbackRequest stars_feedback_request = 34;
+  string model_provider_request_json = 35;
+}
+
+message StreamUnifiedChatResponse.ChunkIdentity {
+  string file_name = 1;
+  int32 start_line = 2;
+  int32 end_line = 3;
+  string text = 4;
+  int32 /* enum */ chunk_type = 5;
+}
+
+message StreamUnifiedChatResponse.FinalToolResult {
+  string tool_call_id = 1;
+  ClientSideToolV2Result result = 2;
+}
+
+message StreamUnifiedChatResponse.ImageDescription {
+  string description = 1;
+  string image_uuid = 2;
+}
+
+message StreamUnifiedChatResponse.UsedCode {
+  CodeResult code_results = 1;
+}
+
+message StreamUnifiedChatResponseWithTools {
+  SpanContext tracing_context = 6;
+  string event_id = 7;
+  oneof response {
+    ClientSideToolV2Call client_side_tool_v2_call = 1;
+    StreamUnifiedChatResponse stream_unified_chat_response = 2;
+    ConversationSummary conversation_summary = 3;
+    UserRules user_rules = 4;
+    StreamStart stream_start = 5;
+  }
+}
+
+message StreamUnifiedChatResponseWithToolsIdempotent {
+  oneof response {
+    StreamUnifiedChatResponseWithTools server_chunk = 1;
+    WelcomeMessage welcome_message = 3;
+    uint32 seqno_ack = 4;
+  }
+}
+
+message StreamedBackPartialToolCall {
+  int32 /* enum */ tool = 1;
+  string tool_call_id = 2;
+  string name = 3;
+  uint32 tool_index = 4;
+  string model_call_id = 5;
+}
+
+message StreamedBackToolCall {
+  int32 /* enum */ tool = 1;
+  string tool_call_id = 2;
+  string name = 8;
+  string raw_args = 9;
+  ToolResultError error = 10;
+  uint32 tool_index = 50;
+  string model_call_id = 51;
+  oneof params {
+    ReadSemsearchFilesStream read_semsearch_files_stream = 3;
+    RipgrepSearchStream ripgrep_search_stream = 5;
+    ReadFileStream read_file_stream = 7;
+    ListDirStream list_dir_stream = 12;
+    EditFileStream edit_file_stream = 13;
+    ToolCallFileSearchStream file_search_stream = 14;
+    SemanticSearchFullStream semantic_search_full_stream = 19;
+    DeleteFileStream delete_file_stream = 21;
+    ReapplyStream reapply_stream = 22;
+    RunTerminalCommandV2Stream run_terminal_command_v2_stream = 25;
+    FetchRulesStream fetch_rules_stream = 26;
+    WebSearchStream web_search_stream = 28;
+    MCPStream mcp_stream = 29;
+    SearchSymbolsStream search_symbols_stream = 33;
+    GotodefStream gotodef_stream = 41;
+    BackgroundComposerFollowupStream background_composer_followup_stream = 34;
+    KnowledgeBaseStream knowledge_base_stream = 35;
+    FetchPullRequestStream fetch_pull_request_stream = 36;
+    DeepSearchStream deep_search_stream = 37;
+    CreateDiagramStream create_diagram_stream = 38;
+    FixLintsStream fix_lints_stream = 39;
+    ReadLintsStream read_lints_stream = 40;
+    TaskStream task_stream = 42;
+    AwaitTaskStream await_task_stream = 43;
+    /* unresolved */ todo_read_stream = 44;
+    TodoWriteStream todo_write_stream = 45;
+    EditFileV2Stream edit_file_v2_stream = 52;
+    ListDirV2Stream list_dir_v2_stream = 53;
+    /* unresolved */ read_file_v2_stream = 54;
+    RipgrepRawSearchStream ripgrep_raw_search_stream = 55;
+    /* unresolved */ glob_file_search_stream = 56;
+    /* unresolved */ create_plan_stream = 57;
+    /* unresolved */ list_mcp_resources_stream = 58;
+    /* unresolved */ read_mcp_resource_stream = 59;
+    /* unresolved */ read_project_stream = 60;
+    /* unresolved */ update_project_stream = 61;
+    TaskV2Stream task_v2_stream = 62;
+    /* unresolved */ call_mcp_tool_stream = 63;
+    /* unresolved */ ask_question_stream = 64;
+    /* unresolved */ switch_mode_stream = 65;
+    /* unresolved */ computer_use_stream = 66;
+    /* unresolved */ write_shell_stdin_stream = 67;
+    /* unresolved */ web_fetch_stream = 68;
+    /* unresolved */ report_bugfix_results_stream = 69;
+    /* unresolved */ mcp_auth_stream = 70;
+  }
+}
+
+message StreamedBackToolCallV2 {
+  int32 /* enum */ tool = 1;
+  string tool_call_id = 2;
+  string name = 8;
+  string raw_args = 10;
+  ToolResultError error = 11;
+  uint32 tool_index = 50;
+  string model_call_id = 51;
+  oneof params {
+    ReadSemsearchFilesParams read_semsearch_files_params = 3;
+    RipgrepSearchParams ripgrep_search_params = 5;
+    ReadFileParams read_file_params = 9;
+    ListDirParams list_dir_params = 12;
+    EditFileParams edit_file_params = 13;
+    ToolCallFileSearchParams file_search_params = 16;
+    SemanticSearchFullParams semantic_search_full_params = 17;
+    DeleteFileParams delete_file_params = 19;
+    ReapplyParams reapply_params = 20;
+    RunTerminalCommandV2Params run_terminal_command_v2_params = 23;
+    FetchRulesParams fetch_rules_params = 24;
+    WebSearchParams web_search_params = 26;
+    MCPParams mcp_params = 27;
+    /* unresolved */ search_symbols_params = 31;
+    GotodefParams gotodef_params = 41;
+    BackgroundComposerFollowupParams background_composer_followup_params = 32;
+    KnowledgeBaseParams knowledge_base_params = 33;
+    FetchPullRequestParams fetch_pull_request_params = 34;
+    DeepSearchParams deep_search_params = 35;
+    CreateDiagramParams create_diagram_params = 36;
+    FixLintsParams fix_lints_params = 37;
+    ReadLintsParams read_lints_params = 38;
+    TaskParams task_params = 42;
+    AwaitTaskParams await_task_params = 43;
+    TodoReadParams todo_read_params = 44;
+    TodoWriteParams todo_write_params = 45;
+    EditFileV2Params edit_file_v2_params = 48;
+    /* unresolved */ list_dir_v2_params = 49;
+    /* unresolved */ read_file_v2_params = 61;
+    RipgrepRawSearchParams ripgrep_raw_search_params = 62;
+    /* unresolved */ glob_file_search_params = 63;
+    /* unresolved */ create_plan_params = 64;
+    ListMcpResourcesParams list_mcp_resources_params = 65;
+    ReadMcpResourceParams read_mcp_resource_params = 66;
+    /* unresolved */ read_project_params = 67;
+    /* unresolved */ update_project_params = 68;
+    TaskV2Params task_v2_params = 69;
+    CallMcpToolParams call_mcp_tool_params = 70;
+    ApplyAgentDiffParams apply_agent_diff_params = 71;
+    /* unresolved */ ask_question_params = 72;
+    /* unresolved */ switch_mode_params = 73;
+    /* unresolved */ computer_use_params = 74;
+    agent.v1.WriteShellStdinArgs write_shell_stdin_params = 75;
+    /* unresolved */ record_screen_params = 76;
+    /* unresolved */ web_fetch_params = 77;
+    /* unresolved */ report_bugfix_results_params = 78;
+    /* unresolved */ mcp_auth_params = 79;
+  }
+}
+
+message SttClientMessage {
+  oneof payload {
+    /* unresolved */ config = 1;
+    SttAudioChunk audio = 2;
+    SttControl control = 3;
+  }
+}
+
+message SttServerMessage {
+  string text = 1;
+  bool is_final = 2;
+}
+
+message SubmitChatRequestEventsRequest {
+  string session_id = 1;
+  ChatRequestTelemetryEvent events = 2;
+  string client_version = 3;
+  string client_commit = 4;
+  map<string, string> /* approx */ platform_tags = 5;
+  string window_type = 6;
+}
+
+message SubmitChatRequestEventsResponse {
+  bool success = 1;
+  string error_message = 2;
+  int32 events_processed = 3;
+}
+
+message SubmitChatRequestEventsV2Request {
+  string session_id = 1;
+  ChatRequestTelemetryEventV2 events = 2;
+  string client_version = 3;
+  string client_commit = 4;
+  map<string, string> /* approx */ platform_tags = 5;
+  string window_type = 6;
+}
+
+message SubmitChatRequestEventsV2Response {
+  bool success = 1;
+  string error_message = 2;
+  int32 events_processed = 3;
+}
+
+message SubmitToolCallEventsRequest {
+  string session_id = 1;
+  ToolCallTelemetryEvent events = 2;
+  string client_version = 3;
+  string client_commit = 4;
+  map<string, string> /* approx */ platform_tags = 5;
+  string window_type = 6;
+}
+
+message SubmitToolCallEventsResponse {
+  bool success = 1;
+  string error_message = 2;
+  int32 events_processed = 3;
+}
+
+message SwGetExplicitContextResponse {
+  ExplicitContext explicit_context = 1;
+}
+
+message SwTrackModelRequest {
+  string absolute_path = 1;
+}
+
+message SwitchModelAction {
+  string suggested_model = 1;
+}
+
+message TaskLogToolResult {
+  ToolResult tool_result = 1;
+  int32 action_sequence_number = 2;
+}
+
+message TaskSendMessageRequest {
+  string task_uuid = 1;
+  TaskUserMessage user_message = 2;
+  bool wants_attention_right_now = 3;
+}
+
+message TaskStreamChatContextRequest {
+  CurrentFileInfo current_file = 1;
+  ConversationMessage conversation = 2;
+  RepositoryInfo repositories = 3;
+  ExplicitContext explicit_context = 4;
+  string workspace_root_path = 5;
+  CodeBlock code_blocks = 6;
+  ModelDetails model_details = 7;
+  string documentation_identifiers = 8;
+  LinterErrors linter_errors = 14;
+  AdvancedCodebaseContextOptions advanced_codebase_context = 15;
+  bool is_eval = 16;
+  string request_id = 17;
+  int32 desired_token_limit = 18;
+}
+
+message TaskStreamChatContextResponse {
+  oneof response {
+    TaskStreamChatContextResponse.Output output = 1;
+    TaskStreamChatContextResponse.GatheringStep gathering_step = 2;
+    TaskStreamChatContextResponse.GatheringFile gathering_file = 3;
+    TaskStreamChatContextResponse.RerankingStep reranking_step = 4;
+    TaskStreamChatContextResponse.RerankingFile reranking_file = 5;
+    TaskStreamChatContextResponse.ReasoningStep reasoning_step = 6;
+    TaskStreamChatContextResponse.ReasoningSubstep reasoning_substep = 7;
+  }
+}
+
+message TaskStreamChatContextResponse.GatheringFile {
+  string relative_workspace_path = 1;
+  SimpleRange range = 2;
+  int32 step_index = 3;
+  float score = 4;
+}
+
+message TaskStreamChatContextResponse.GatheringStep {
+  string title = 1;
+  int32 index = 2;
+  string query = 3;
+}
+
+message TaskStreamChatContextResponse.Output {
+  string text = 1;
+}
+
+message TaskStreamChatContextResponse.ReasoningStep {
+  string title = 1;
+  int32 index = 2;
+}
+
+message TaskStreamChatContextResponse.ReasoningSubstep {
+  string markdown_explanation = 1;
+  int32 step_index = 2;
+}
+
+message TaskStreamChatContextResponse.RerankingFile {
+  string relative_workspace_path = 1;
+  SimpleRange range = 2;
+  string reason = 3;
+  bool failed = 4;
+  float score = 5;
+  int32 step_index = 6;
+}
+
+message TaskStreamChatContextResponse.RerankingStep {
+  string title = 1;
+  int32 index = 2;
+}
+
+message TaskStreamChatContextResponseWrapped {
+  oneof response {
+    TaskStreamChatContextResponse real_response = 1;
+    string background_task_uuid = 2;
+  }
+}
+
+message TaskUserMessage {
+  string text = 1;
+  /* unresolved */ attached_code_chunks = 2;
+}
+
+message TaskUserMessage.CodeChunk {
+  string relative_workspace_path = 1;
+  int32 start_line_number = 2;
+  string lines = 3;
+}
+
+message TestModelStatusRequest {
+  string model_name = 1;
+}
+
+message TestModelStatusResponse {
+  string text = 1;
+  float latency = 2;
+  float ttft = 3;
+  float max_time_between_chunks = 4;
+  string server_timing = 5;
+}
+
+message ToolCall {
+  oneof tool_call {
+    BuiltinToolCall builtin_tool_call = 1;
+    CustomToolCall custom_tool_call = 2;
+  }
+}
+
+message ToolCallEvent {
+  string tool_call_id = 1;
+  string request_id = 2;
+  string tool_name = 3;
+}
+
+message ToolCallFileSearchParams {
+  string query = 1;
+}
+
+message ToolCallFileSearchResult {
+  ToolCallFileSearchResult.File files = 1;
+  bool limit_hit = 2;
+  int32 num_results = 3;
+}
+
+message ToolCallFileSearchResult.File {
+  string uri = 1;
+}
+
+message ToolCallFileSearchStream {
+  string query = 1;
+}
+
+message ToolCallTelemetryEvent {
+  string tool_call_id = 1;
+  string tool_type = 2;
+  string chat_request_uuid = 3;
+  string model_name = 4;
+  /* unresolved */ start_time = 5;
+  /* unresolved */ end_time = 6;
+  google.protobuf.Duration duration = 7;
+  bool is_parallel = 8;
+  int32 parallel_batch_size = 9;
+  bool success = 10;
+  string error_message = 11;
+  map<string, string> /* approx */ metadata = 12;
+  google.protobuf.Duration approval_wait_duration = 13;
+  bool is_stream = 14;
+}
+
+message ToolResult {
+  oneof tool_result {
+    BuiltinToolResult builtin_tool_result = 1;
+    CustomToolResult custom_tool_result = 2;
+    ErrorToolResult error_tool_result = 3;
+  }
+}
+
+message ToolResultAttachments {
+  TodoItem original_todos = 1;
+  TodoItem updated_todos = 2;
+  NudgeMessage nudge_messages = 3;
+  bool should_show_todo_write_reminder = 4;
+  int32 /* enum */ todo_reminder_type = 5;
+  ToolResultAttachments.DiscoveryBudgetReminder discovery_budget_reminder = 6;
+}
+
+message ToolResultAttachments.DiscoveryBudgetReminder {
+  int32 discovery_rounds_remaining = 1;
+  string discovery_effort = 2;
+}
+
+message ToolResultError {
+  string client_visible_error_message = 1;
+  string model_visible_error_message = 2;
+  string actual_error_message_only_send_from_client_to_server_never_the_other_way_around_because_that_may_be_a_security_risk = 3;
+  oneof error_details {
+    ToolResultError.EditFileError edit_file_error_details = 5;
+    ToolResultError.SearchReplaceError search_replace_error_details = 6;
+  }
+}
+
+message ToolResultError.EditFileError {
+  int32 num_lines_in_file_before_edit = 1;
+}
+
+message ToolResultError.SearchReplaceError {
+  int32 num_lines_in_file_before_edit = 1;
+}
+
+message TrackModelRequest {
+  string root_path = 1;
+  string absolute_path = 2;
+}
+
+message UpdateBackgroundComposerEnvironmentRequest {
+  string bc_id = 1;
+  bool replace = 2;
+}
+
+message UpdateBackgroundComposerEnvironmentResponse {
+  uint32 applied = 1;
+  uint32 removed = 2;
+}
+
+message UpdateBackgroundComposerSecretRequest {
+  string name = 1;
+  bool team_scope = 2;
+  string scoped_to_repos = 3;
+  int32 /* enum */ level = 4;
+  string value = 5;
+  int32 id = 6;
+}
+
+message UpdateBackgroundComposerUserSettingsRequest {
+  string model_name = 1;
+  bool slack_notifications_for_web_enabled = 2;
+  bool ci_failure_followup_enabled = 3;
+  bool browser_use_enabled = 4;
+  int32 /* enum */ auto_create_pr_setting = 5;
+  int32 /* enum */ pr_review_open_destination = 6;
+  int32 /* enum */ github_artifact_posting = 7;
+  int32 /* enum */ egress_protection_mode = 8;
+  BackgroundComposerUserEgressPolicy egress_policy = 9;
+}
+
+message UpdateSharedConversationVisibilityRequest {
+  string share_id = 1;
+  int32 /* enum */ visibility = 2;
+}
+
+message UpdateSharedConversationVisibilityResponse {
+  bool success = 1;
+}
+
+message UpdateTeamSharedConversationSettingsRequest {
+  int32 team_id = 1;
+  SharedConversationSettings settings = 2;
+}
+
+message UsageEventDetails.Chat {
+  string model_intent = 1;
+  int32 override_num_requests_counted = 2;
+  bool is_token_based_call = 3;
+  TokenUsage token_usage = 4;
+  bool max_mode = 5;
+}
+
+message UsageEventDetails.Composer {
+  string model_intent = 1;
+  int32 override_num_requests_counted = 2;
+  bool is_headless = 3;
+  bool is_token_based_call = 4;
+  TokenUsage token_usage = 5;
+  bool max_mode = 6;
+}
+
+message UsageEventDetails.ContextChat {
+  string model_intent = 1;
+  int32 override_num_requests_counted = 2;
+  bool is_token_based_call = 3;
+  TokenUsage token_usage = 4;
+  bool max_mode = 5;
+}
+
+message UsageEventDetails.InterpreterChat {
+  string model_intent = 1;
+  int32 override_num_requests_counted = 2;
+  bool is_token_based_call = 3;
+  TokenUsage token_usage = 4;
+  bool max_mode = 5;
+}
+
+message UsageEventDetails.ToolCallComposer {
+  string model_intent = 1;
+  int32 override_num_requests_counted = 2;
+  bool is_headless = 3;
+  bool is_token_based_call = 4;
+  TokenUsage token_usage = 5;
+  bool max_mode = 6;
+}
+
+message UsageEventDetails.WarmComposer {
+  string model_intent = 1;
+  bool max_mode = 2;
+}
+
+message VerifyBackgroundComposerAccessRequest {
+  string bc_id = 1;
+  string access_type = 2;
+}
+
+message VerifyBackgroundComposerAccessResponse {
+  bool has_access = 1;
+}
+
+message ViewableGitContext {
+  ViewableCommitProps commit_data = 1;
+  ViewablePRProps pull_request_data = 2;
+  ViewableDiffProps diff_data = 3;
+}
+
+message WarmChatCacheRequest {
+  GetChatRequest request = 1;
+}
+
+message WarmChatCacheResponse {
+  bool did_warm_cache = 1;
+}
+
+message WarmComposerCacheResponse {
+  bool did_warm_cache = 1;
+}
+
+message WatchBackgroundComposerSnapshotStateRequest {
+  string snapshot_id = 1;
+}
+
+message WatchBackgroundComposerSnapshotStateResponse {
+  string snapshot_id = 1;
+  int32 /* enum */ state = 2;
+  string error_message = 3;
+}
+
+message WelcomeMessage {
+  string message = 1;
+  bool is_degraded_mode = 2;
+}
+
+message WorktreeEvent.BackgroundAgentComposerMapping {
+  string bc_id = 1;
+  string composer_id = 2;
+}
+
+message WorktreeEvent.WorktreeComposerMapping {
+  string worktree_path = 1;
+  string composer_id = 2;
+}
+
+message WriteGitCommitMessageRequest {
+  string diffs = 1;
+  string previous_commit_messages = 2;
+  ExplicitContext explicit_context = 3;
+}
+
+message WriteGitCommitMessageResponse {
+  string commit_message = 1;
+}

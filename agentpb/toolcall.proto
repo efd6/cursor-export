@@ -1,0 +1,428 @@
+// Reconstructed from Cursor JS bundle — field numbers and types
+// are derived from @bufbuild/protobuf runtime registrations in
+// workbench.desktop.main.js. Only tool types with useful output
+// are fully defined; others are stubs.
+syntax = "proto3";
+
+package agent.v1;
+
+option go_package = "github.com/efd6/cursor-export/agentpb";
+
+message ToolCall {
+  oneof tool {
+    ShellToolCall shell_tool_call = 1;
+    DeleteToolCall delete_tool_call = 3;
+    GlobToolCall glob_tool_call = 4;
+    GrepToolCall grep_tool_call = 5;
+    ReadToolCall read_tool_call = 8;
+    Stub update_todos_tool_call = 9;
+    Stub read_todos_tool_call = 10;
+    EditToolCall edit_tool_call = 12;
+    LsToolCall ls_tool_call = 13;
+    Stub read_lints_tool_call = 14;
+    Stub mcp_tool_call = 15;
+    Stub sem_search_tool_call = 16;
+    Stub create_plan_tool_call = 17;
+    Stub web_search_tool_call = 18;
+    TaskToolCall task_tool_call = 19;
+    Stub list_mcp_resources_tool_call = 20;
+    Stub read_mcp_resource_tool_call = 21;
+    Stub apply_agent_diff_tool_call = 22;
+    Stub ask_question_tool_call = 23;
+    FetchToolCall fetch_tool_call = 24;
+    Stub switch_mode_tool_call = 25;
+    Stub generate_image_tool_call = 28;
+    Stub record_screen_tool_call = 29;
+    Stub computer_use_tool_call = 30;
+    Stub write_shell_stdin_tool_call = 31;
+    Stub reflect_tool_call = 32;
+    Stub setup_vm_environment_tool_call = 33;
+    Stub truncated_tool_call = 34;
+    Stub start_grind_execution_tool_call = 35;
+    Stub start_grind_planning_tool_call = 36;
+    Stub web_fetch_tool_call = 37;
+    Stub report_bugfix_results_tool_call = 38;
+    Stub ai_attribution_tool_call = 39;
+  }
+}
+
+// Stub is a placeholder for tool call types we don't decode in detail.
+message Stub {}
+
+// Shell
+
+message ShellToolCall {
+  ShellArgs args = 1;
+  ShellResult result = 2;
+  string description = 3;
+}
+
+message ShellArgs {
+  string command = 1;
+  string working_directory = 2;
+  int32 timeout = 3;
+  string tool_call_id = 4;
+  repeated string simple_commands = 5;
+  bool is_background = 11;
+  string description = 15;
+}
+
+message ShellResult {
+  SandboxPolicy sandbox_policy = 101;
+  bool is_background = 102;
+  string terminals_folder = 103;
+  uint32 pid = 104;
+  oneof result {
+    ShellSuccess success = 1;
+    ShellFailure failure = 2;
+    ShellTimeout timeout = 3;
+    ShellRejected rejected = 4;
+    ShellSpawnError spawn_error = 5;
+    ShellPermissionDenied permission_denied = 7;
+  }
+}
+
+message ShellSuccess {
+  string command = 1;
+  string working_directory = 2;
+  int32 exit_code = 3;
+  string signal = 4;
+  string stdout = 5;
+  string stderr = 6;
+  int32 execution_time = 7;
+  OutputLocation output_location = 8;
+  uint32 shell_id = 9;
+  string interleaved_output = 10;
+  uint32 pid = 11;
+  int32 ms_to_wait = 12;
+  int32 local_execution_time_ms = 13;
+}
+
+message ShellFailure {
+  string command = 1;
+  string working_directory = 2;
+  int32 exit_code = 3;
+  string signal = 4;
+  string stdout = 5;
+  string stderr = 6;
+  int32 execution_time = 7;
+  OutputLocation output_location = 8;
+  string interleaved_output = 9;
+  bool aborted = 11;
+  int32 local_execution_time_ms = 12;
+}
+
+message ShellTimeout {
+  string command = 1;
+  string working_directory = 2;
+  int32 timeout_ms = 3;
+}
+
+message ShellRejected {
+  string command = 1;
+}
+
+message ShellSpawnError {
+  string command = 1;
+  string working_directory = 2;
+  string error = 3;
+}
+
+message ShellPermissionDenied {
+  string command = 1;
+}
+
+message SandboxPolicy {}
+
+message OutputLocation {
+  string file_path = 1;
+  uint64 start_bytes = 2;
+  uint64 size_bytes = 3;
+  uint64 line_count = 4;
+}
+
+// Read
+
+message ReadToolCall {
+  ReadToolArgs args = 1;
+  ReadToolResult result = 2;
+}
+
+message ReadToolArgs {
+  string file_path = 1;
+  int32 start_line = 2;
+  int32 end_line = 3;
+}
+
+message ReadToolResult {
+  oneof result {
+    ReadToolSuccess success = 1;
+    ReadToolError error = 2;
+  }
+}
+
+message ReadToolSuccess {
+  bool is_empty = 2;
+  bool exceeded_limit = 3;
+  uint32 total_lines = 4;
+  uint32 file_size = 5;
+  string path = 7;
+  oneof output {
+    string content = 1;
+    bytes data = 6;
+  }
+}
+
+message ReadToolError {
+  string error_message = 1;
+}
+
+// Edit
+
+message EditToolCall {
+  EditArgs args = 1;
+  EditResult result = 2;
+}
+
+message EditArgs {
+  string file_path = 1;
+  string old_string = 2;
+  string new_string = 3;
+  bool create_file = 4;
+  bool replace_all = 5;
+}
+
+message EditResult {
+  oneof result {
+    EditSuccess success = 1;
+    EditError error = 2;
+    EditFileNotFound file_not_found = 3;
+    EditRejected rejected = 4;
+  }
+}
+
+message EditSuccess {
+  string file_path = 1;
+  string new_content = 2;
+}
+
+message EditError {
+  string message = 1;
+}
+
+message EditFileNotFound {
+  string path = 1;
+}
+
+message EditRejected {
+  string path = 1;
+  string reason = 2;
+}
+
+// Glob
+
+message GlobToolCall {
+  GlobToolArgs args = 1;
+  GlobToolResult result = 2;
+}
+
+message GlobToolArgs {
+  string pattern = 1;
+  string path = 2;
+}
+
+message GlobToolResult {
+  oneof result {
+    GlobToolSuccess success = 1;
+    GlobToolError error = 2;
+  }
+}
+
+message GlobToolSuccess {
+  string pattern = 1;
+  string path = 2;
+  repeated string files = 3;
+  int32 total_files = 4;
+}
+
+message GlobToolError {
+  string error = 1;
+}
+
+// Grep
+
+message GrepToolCall {
+  GrepArgs args = 1;
+  GrepResult result = 2;
+}
+
+message GrepArgs {
+  string pattern = 1;
+  string path = 2;
+  string glob = 3;
+  string output_mode = 4;
+  int32 context_before = 5;
+  int32 context_after = 6;
+  bool case_insensitive = 7;
+  bool multiline = 11;
+}
+
+message GrepResult {
+  oneof result {
+    GrepSuccess success = 1;
+    GrepError error = 2;
+  }
+}
+
+message GrepSuccess {
+  GrepUnionResult union_result = 1;
+  bool truncated = 2;
+}
+
+message GrepUnionResult {
+  oneof result {
+    GrepCountResult count = 1;
+    GrepFilesResult files = 2;
+    GrepContentResult content = 3;
+  }
+}
+
+message GrepCountResult {
+  repeated GrepFileCount file_counts = 1;
+  int32 total = 2;
+}
+
+message GrepFileCount {
+  string path = 1;
+  int32 count = 2;
+}
+
+message GrepFilesResult {
+  repeated GrepFileMatch file_matches = 1;
+  int32 total = 2;
+}
+
+message GrepFileMatch {
+  string path = 1;
+}
+
+message GrepContentResult {
+  repeated GrepContentMatch matches = 1;
+  int32 total = 2;
+}
+
+message GrepContentMatch {
+  string path = 1;
+  int32 line_number = 2;
+  string content = 3;
+}
+
+message GrepError {
+  string error = 1;
+}
+
+// Delete
+
+message DeleteToolCall {
+  DeleteArgs args = 1;
+  DeleteResult result = 2;
+}
+
+message DeleteArgs {
+  string file_path = 1;
+}
+
+message DeleteResult {
+  oneof result {
+    DeleteSuccess success = 1;
+    DeleteError error = 2;
+  }
+}
+
+message DeleteSuccess {
+  string file_path = 1;
+}
+
+message DeleteError {
+  string message = 1;
+}
+
+// Fetch (web_fetch)
+
+message FetchToolCall {
+  FetchArgs args = 1;
+  FetchResult result = 2;
+}
+
+message FetchArgs {
+  string url = 1;
+}
+
+message FetchResult {
+  oneof result {
+    FetchSuccess success = 1;
+    FetchError error = 2;
+  }
+}
+
+message FetchSuccess {
+  string url = 1;
+  string content = 2;
+}
+
+message FetchError {
+  string message = 1;
+}
+
+// Ls
+
+message LsToolCall {
+  LsArgs args = 1;
+  LsResult result = 2;
+}
+
+message LsArgs {
+  string path = 1;
+  int32 max_depth = 2;
+}
+
+message LsResult {
+  oneof result {
+    LsSuccess success = 1;
+    LsError error = 2;
+  }
+}
+
+message LsSuccess {
+  string output = 1;
+}
+
+message LsError {
+  string error = 1;
+}
+
+// Task (subagent)
+
+message TaskToolCall {
+  TaskArgs args = 1;
+  TaskResult result = 2;
+}
+
+message TaskArgs {
+  string prompt = 1;
+}
+
+message TaskResult {
+  oneof result {
+    TaskSuccess success = 1;
+    TaskError error = 2;
+  }
+}
+
+message TaskSuccess {
+  string result = 1;
+}
+
+message TaskError {
+  string message = 1;
+}

@@ -94,10 +94,11 @@ type thinkingBlock struct {
 }
 
 type toolFormerData struct {
-	Name   string `json:"name"`
-	Params string `json:"params"`
-	Result string `json:"result,omitempty"`
-	Status string `json:"status,omitempty"`
+	Name           string `json:"name"`
+	Params         string `json:"params"`
+	Result         string `json:"result,omitempty"`
+	Status         string `json:"status,omitempty"`
+	ToolCallBinary string `json:"toolCallBinary,omitempty"`
 }
 
 type modelInfo struct {
