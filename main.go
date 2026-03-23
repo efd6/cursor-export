@@ -692,6 +692,24 @@ func writeJSON(w io.Writer, exports []workspaceExport) {
 }
 
 func writeMarkdown(w io.Writer, exports []workspaceExport) {
+	var date time.Time
+	for _, ws := range exports {
+		for _, ch := range ws.Chats {
+			if date.IsZero() || ch.CreatedAt.Before(date) {
+				date = ch.CreatedAt
+			}
+		}
+	}
+	if !date.IsZero() {
+		fmt.Fprintf(w, `---
+date: %s
+tags:
+  - cursor_chat
+---
+
+`, date.Format(time.DateOnly))
+	}
+
 	for _, ws := range exports {
 		fmt.Fprintf(w, "# %s\n\n", ws.Name)
 		if ws.Folder != "" {
