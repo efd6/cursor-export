@@ -63,20 +63,6 @@ func main() {
 	}
 	defer gdb.Close()
 
-	var out io.Writer = os.Stdout
-	if *outFile != "" {
-		f, err := os.Create(*outFile)
-		if err != nil {
-			log.Fatalf("creating output file: %v", err)
-		}
-		defer func() {
-			if err := f.Close(); err != nil {
-				log.Fatalf("closing output file: %v", err)
-			}
-		}()
-		out = f
-	}
-
 	var exports []workspaceExport
 	for _, w := range workspaces {
 		if *ws != "" && !matchWorkspace(w, *ws) {
@@ -90,6 +76,24 @@ func main() {
 		if len(export.Chats) > 0 {
 			exports = append(exports, export)
 		}
+	}
+
+	if *format == "md" && len(exports) == 0 {
+		return
+	}
+
+	var out io.Writer = os.Stdout
+	if *outFile != "" {
+		f, err := os.Create(*outFile)
+		if err != nil {
+			log.Fatalf("creating output file: %v", err)
+		}
+		defer func() {
+			if err := f.Close(); err != nil {
+				log.Fatalf("closing output file: %v", err)
+			}
+		}()
+		out = f
 	}
 
 	switch *format {
